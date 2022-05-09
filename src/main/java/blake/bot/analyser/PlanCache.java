@@ -18,6 +18,8 @@ public class PlanCache {
 
     private static int dumbBotAccepts = 0;
     private static int dumbBotRejects = 0;
+    private static int planIsBetter;
+    private static int planIsWorse;
     private final DBraneTactics tactics;
     Power me;
     Game game;
@@ -52,6 +54,22 @@ public class PlanCache {
         PlanCache.dumbBotRejects = dumbBotRejects;
     }
 
+    public static int getPlanIsBetter() {
+        return planIsBetter;
+    }
+
+    public static void incrementPlanIsBetter() {
+        PlanCache.planIsBetter++;
+    }
+
+    public static int getPlanIsWorse() {
+        return planIsWorse;
+    }
+
+    public static void incrementPlanIsWorse() {
+        PlanCache.planIsWorse++;
+    }
+
     public AnalysedPlan analysePlan(PlanInfo planInfo) {
         AnalysedPlan ret = new AnalysedPlan(
                 this.tactics.determineBestPlan(
@@ -79,8 +97,13 @@ public class PlanCache {
         final AnalysedPlan currentPlan = this.getNoDealAnalysedPlan();
         int dbraneComp = Comparator.comparing(AnalysedPlan::getDBraneValue).compare(proposal, currentPlan);
         int ret;
-        if (dbraneComp > 0) {
+        if (dbraneComp != 0) {
             ret = dbraneComp;
+            if (ret > 0) {
+                PlanCache.incrementPlanIsBetter();
+            } else {
+                PlanCache.incrementPlanIsWorse();
+            }
             System.out.println(" following DBrane comp " + proposal.getDBraneValue() + " " + currentPlan.getDBraneValue());
         } else {
 //            try {
@@ -100,7 +123,8 @@ public class PlanCache {
                     tactics.determineBestPlan(
                             AdvancedAdjudicator.advanceToMovementPhase(currentPlan.getExpectedResult()),
                             this.me,
-                            currentPlan.getInfo().getCommitments()).getValue());
+                            currentPlan.getInfo().getCommitments()
+                    ).getValue());
             if (ret > 0) {
                 setDumbBotAccepts(getDumbBotAccepts() + 1);
             } else {
@@ -160,4 +184,5 @@ public class PlanCache {
     public AnalysedPlan getNoDealAnalysedPlan() {
         return this.noDealPlan;
     }
+
 }

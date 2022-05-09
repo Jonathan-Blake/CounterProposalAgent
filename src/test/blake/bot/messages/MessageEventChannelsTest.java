@@ -10,10 +10,12 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static blake.bot.messages.MessageEventChannels.SENDING_PROPOSAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class MessageEventChannelsTest {
+    public static final Message RECEIVED_MESSAGE = new Message("1", "2", "3", new BasicDeal(Collections.emptyList(), Collections.emptyList()));
     static AtomicInteger nextSubscriberId = new AtomicInteger(0);
 
     @Test
@@ -35,13 +37,13 @@ public class MessageEventChannelsTest {
     public void testSubscriberAlertsDoNotCrossChannel() {
         TestMessageEventSubscribers sendSubscriber = new TestMessageEventSubscribers(false);
         TestMessageEventSubscribers otherSubscriber = new TestMessageEventSubscribers(false);
-        MessageEventChannels.SENDING_MESSAGE.subscribe(sendSubscriber);
+        SENDING_PROPOSAL.subscribe(sendSubscriber);
         Arrays.stream(MessageEventChannels.values())
-                .filter(value -> value != MessageEventChannels.SENDING_MESSAGE)
+                .filter(value -> value != SENDING_PROPOSAL)
                 .forEach(value -> value.subscribe(otherSubscriber));
         MessageEvent testEvent = new TestMessageEvent(true);
 
-        MessageEventChannels.SENDING_MESSAGE.publish(testEvent);
+        SENDING_PROPOSAL.publish(testEvent);
 
         assertEquals(testEvent, sendSubscriber.getLastEvent());
         assertNull(otherSubscriber.getLastEvent());
@@ -57,10 +59,10 @@ public class MessageEventChannelsTest {
         TestMessageEventSubscribers subscriber = new TestMessageEventSubscribers(false);
         TestMessageEventSubscribers otherSubscriber = new TestMessageEventSubscribers(false);
 
-        MessageEventChannels.SENDING_MESSAGE.subscribe(subscriber);
-        MessageEventChannels.SENDING_MESSAGE.subscribe(otherSubscriber);
+        SENDING_PROPOSAL.subscribe(subscriber);
+        SENDING_PROPOSAL.subscribe(otherSubscriber);
         MessageEvent testEvent = new TestMessageEvent(true);
-        MessageEventChannels.SENDING_MESSAGE.publish(testEvent);
+        SENDING_PROPOSAL.publish(testEvent);
 
         assertEquals(testEvent, subscriber.getLastEvent());
         assertEquals(testEvent, otherSubscriber.getLastEvent());
@@ -76,11 +78,11 @@ public class MessageEventChannelsTest {
         TestMessageEventSubscribers subscriber = new TestMessageEventSubscribers(true);
         TestMessageEventSubscribers otherSubscriber = new TestMessageEventSubscribers(false);
 
-        MessageEventChannels.SENDING_MESSAGE.subscribe(subscriber);
-        MessageEventChannels.SENDING_MESSAGE.subscribe(otherSubscriber);
+        SENDING_PROPOSAL.subscribe(subscriber);
+        SENDING_PROPOSAL.subscribe(otherSubscriber);
         MessageEvent testEvent = new TestMessageEvent(true);
 
-        MessageEventChannels.SENDING_MESSAGE.publish(testEvent);
+        SENDING_PROPOSAL.publish(testEvent);
 
         assertNull(subscriber.getLastEvent());
         assertEquals(testEvent, otherSubscriber.getLastEvent());
@@ -96,7 +98,7 @@ public class MessageEventChannelsTest {
         private final int id;
 
         public TestMessageEvent(boolean b) {
-            super(new Message("1", "2", "3", new BasicDeal(Collections.emptyList(), Collections.emptyList())));
+            super(RECEIVED_MESSAGE);
             this.id = nextId++;
         }
 

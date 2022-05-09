@@ -97,4 +97,10 @@ public class AnalysedPlan {
         }
         return expectedResult;
     }
+
+    public List<Region> getTargets() {
+        return this.getPlan().getMyOrders().stream()
+                .map(Utility.Plans::getFinalDestination)
+                .collect(Collectors.toList());
+    }
 }

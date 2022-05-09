@@ -144,11 +144,11 @@ public class MutualSupportSupplier implements DealGenerator {
     }
 
     private boolean newPlanIsEqualOrBetter(Plan newPlan) {
-        return newPlan != null && Utility.Plans.compare(newPlan, basePlan) >= 1;
+        return newPlan != null && Utility.Plans.dmzsAreIdentical(newPlan, basePlan) >= 1;
     }
 
     private boolean allyFavours(BasicDeal deal, Power other) {
-        return Utility.Plans.compare(
+        return Utility.Plans.dmzsAreIdentical(
                 dBraneTactics.determineBestPlan(this.game, other, new ArrayList<>()),
                 dBraneTactics.determineBestPlan(this.game, other, Collections.singletonList(deal))) >= 0;
     }

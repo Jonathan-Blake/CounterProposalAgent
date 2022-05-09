@@ -8,7 +8,7 @@ import es.csic.iiia.fabregues.dip.board.Phase;
 
 import java.util.Objects;
 
-public class DatedObject {
+public class DatedObject implements Comparable<DatedObject> {
 
     private final Phase phase;
     private final int year;
@@ -69,5 +69,14 @@ public class DatedObject {
     @Override
     public int hashCode() {
         return Objects.hash(getPhase(), getYear());
+    }
+
+    @Override
+    public int compareTo(DatedObject o) {
+        if (Utility.Dates.isHistory(this, o)) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

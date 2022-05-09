@@ -97,7 +97,7 @@ public class CombinedAttackSupplier implements DealGenerator {
     private BasicDeal testPlan(ArrayList<OrderCommitment> orderCommitments, Province target) {
         final BasicDeal newDeal = new BasicDeal(orderCommitments, createDMZ(orderCommitments, target));
         Plan newPlan = dBraneTactics.determineBestPlan(game, this.me, Utility.Lists.append(this.commitments, newDeal), this.allies);
-        if (newPlan != null && Utility.Plans.compare(newPlan, this.plan) >= 1) {
+        if (newPlan != null && Utility.Plans.dmzsAreIdentical(newPlan, this.plan) >= 1) {
             return newDeal;
         }
         return null;

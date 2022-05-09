@@ -4,13 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum MessageEventChannels {
-    SENDING_MESSAGE,
+    SENDING_PROPOSAL,
     SENDING_APPROVAL,
     SENDING_REJECTION,
-    RECEIVING_MESSAGE,
-    RECEIVING_APPROVAL,
+    RECEIVING_PROPOSAL,
+    //RECEIVING_APPROVAL,
     RECEIVING_REJECTION,
-    RECEIVING_CONFIRMATION, RECEIVING_ACCEPTANCE;
+    RECEIVING_CONFIRMATION,
+    RECEIVING_ACCEPTANCE;
 
     Set<MessageEventSubscribers> subscribers = new HashSet<>();
 
@@ -28,7 +29,8 @@ public enum MessageEventChannels {
             try {
                 subscriber.alert(event);
             } catch (RuntimeException e) {
-                System.out.println("CAUGHT EXCEPTION");
+                System.out.println("CAUGHT EXCEPTION " + subscriber);
+                e.printStackTrace();
             }
         });
     }

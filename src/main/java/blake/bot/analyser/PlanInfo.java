@@ -1,6 +1,7 @@
 package blake.bot.analyser;
 
 import blake.bot.utility.HashedPower;
+import blake.bot.utility.Utility;
 import ddejonge.bandana.negoProtocol.BasicDeal;
 import es.csic.iiia.fabregues.dip.board.Game;
 import es.csic.iiia.fabregues.dip.board.Power;
@@ -39,7 +40,7 @@ public class PlanInfo {
     }
 
     public List<BasicDeal> getCommitments() {
-        return commitments;
+        return Utility.Lists.append(commitments, getDeal());
     }
 
     public BasicDeal getDeal() {

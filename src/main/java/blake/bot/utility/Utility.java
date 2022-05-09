@@ -3,15 +3,14 @@ package blake.bot.utility;
 import ddejonge.bandana.dbraneTactics.Plan;
 import ddejonge.bandana.negoProtocol.BasicDeal;
 import ddejonge.bandana.negoProtocol.DMZ;
+import ddejonge.bandana.negoProtocol.OrderCommitment;
 import ddejonge.bandana.tools.Utilities;
 import es.csic.iiia.fabregues.dip.board.*;
 import es.csic.iiia.fabregues.dip.orders.*;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -146,13 +145,20 @@ public class Utility {
             }
         }
 
-        public static Integer compare(Plan plan, Plan otherPlan) {
+        public static Integer dmzsAreIdentical(Plan plan, Plan otherPlan) {
             if (plan == null ^ otherPlan == null) {
                 return plan == null ? -1 : 1;
             } else if (areIdentical(plan, otherPlan)) {
                 return 0;
             }
             return (plan != null ? plan.getValue() : -1000) - (otherPlan != null ? otherPlan.getValue() : -1000);
+        }
+
+        public static boolean dmzsAreIdentical(DMZ dmz, DMZ other) {
+            return dmz.getYear() == other.getYear() &&
+                    dmz.getPhase() == other.getPhase() &&
+                    dmz.getPowers().equals(other.getPowers()) &&
+                    dmz.getProvinces().equals(other.getProvinces());
         }
 
         public static boolean isPeaceDeal(BasicDeal deal, Power power) {
@@ -212,10 +218,26 @@ public class Utility {
             }
             return region;
         }
+
+        public static BasicDeal merge(BasicDeal... deals) {
+            List<OrderCommitment> orders = Arrays.stream(deals)
+                    .flatMap(deal -> deal.getOrderCommitments().stream())
+                    .collect(Collectors.toList());
+            List<DMZ> dmzs = Arrays.stream(deals)
+                    .flatMap(deal -> deal.getDemilitarizedZones().stream())
+                    .collect(Collectors.toList());
+            return new BasicDeal(orders, dmzs);
+        }
     }
 
     public static class Lists {
         private Lists() {
+        }
+
+        public static <T> List<T> append(Collection<T> a, Collection<T> b) {
+            List<T> ret = new LinkedList<>(a);
+            ret.addAll(b);
+            return ret;
         }
 
         public static <T> List<T> append(List<T> list, T addition) {
@@ -242,6 +264,21 @@ public class Utility {
             ret.removeIf(filter);
             return ret;
         }
+
+        public static <T> List<T> createSortedList(Collection<T> unsortedList, Comparator<T> comparator) {
+            ArrayList<T> ret = new ArrayList<>(unsortedList);
+            ret.sort(comparator);
+            return ret;
+        }
+
+        public static <I, O> List<O> mapList(Collection<I> inputList, Function<I, O> transformation) {
+            List<O> output = new LinkedList<>();
+            for (I i : inputList) {
+                output.add(transformation.apply(i));
+            }
+            return output;
+        }
+
     }
 
     public static class Probability {

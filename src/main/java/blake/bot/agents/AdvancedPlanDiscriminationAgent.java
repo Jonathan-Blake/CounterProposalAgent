@@ -36,11 +36,6 @@ public class AdvancedPlanDiscriminationAgent extends AbstractNegotiationLoopNego
         this.planCache = new PlanCache(this.getTacticalModule());
     }
 
-    public static void main(String[] args) {
-        AdvancedPlanDiscriminationAgent myPlayer = new AdvancedPlanDiscriminationAgent(args);
-        myPlayer.run();
-    }
-
     @Override
     public void negotiate(long negotiationDeadline) {
         this.planCache.setNextTurn(this.getGame(), this.getMe(), this.getConfirmedDeals());

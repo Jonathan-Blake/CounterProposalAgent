@@ -53,6 +53,8 @@ public abstract class AbstractNegotiationLoopNegotiator extends ANACNegotiator {
                 final Iterator<BasicDeal> iterator = this.getProposalSupplier().iterator();
                 if (iterator.hasNext()) {
                     this.proposeDealAndLog(iterator.next());
+                } else {
+                    this.getLogger().logln("Unable to find deal", true);
                 }
                 if (++loopSinceMessage >= 5) {
                     //break if more than a second and no more deals are accepted or offered
