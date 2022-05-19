@@ -58,10 +58,9 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
                         );
                         newPlan.getInfo().setDealId(receivedProposal.getId());
 
-                        if (newPlan.getDBraneValue() - planCache.getNoDealAnalysedPlan().getDBraneValue() == 0 &&
-                                (this.planCache.getNoDealPlan().getMyOrders().containsAll(newPlan.getPlan().getMyOrders())
-                                        && this.getAllies().contains(this.game.getPower(receivedMessage.getSender()))
-                                )
+                        if (newPlan.getDBraneValue() - planCache.getNoDealAnalysedPlan().getDBraneValue() == 0
+                                && this.planCache.getNoDealPlan().getMyOrders().containsAll(newPlan.getPlan().getMyOrders())
+                                && this.getAllies().contains(this.game.getPower(receivedMessage.getSender()))
                         ) {
                             this.getLogger().logln("APDAgent.negotiate() Accepted proposal (same orders) from " + receivedMessage.getSender() + ": " + receivedProposal, true);
                             this.getLogger().logln("My plan was " + this.planCache.getNoDealPlan().getMyOrders(), true);
@@ -78,11 +77,12 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
 //                            this.acceptProposal(receivedProposal.getId());
                             this.acceptanceSource.merge("Plan is not worse", 1, Integer::sum);
                             this.counterProposalProposal.addOffer(receivedProposal);
-                            this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
+                            this.rejectProposal(receivedProposal.getId());
+//                            this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
                             this.getLogger().logln("APDAgent.negotiate() CounterPropose proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
                         } else {
 //                            this.rejectProposal(receivedProposal.getId());
-                            this.counterProposalProposal.addOffer(receivedProposal);
+//                            this.counterProposalProposal.addOffer(receivedProposal);
                             this.acceptanceSource.merge("Plan Rejected", 1, Integer::sum);
                             this.getLogger().logln("APDAgent.negotiate() Rejected proposal from " + receivedMessage.getSender() + ": " + receivedProposal);
                             this.rejectAndDislikeProposal(receivedProposal.getId(), receivedMessage.getSender());

@@ -68,14 +68,25 @@ public class MessageHelper {
     }
 
     private boolean messageAcceptanceReceived(final MessageEvent event) {
-        return this.conversations.get(event.getMessage().getConversationId()).markAcceptance(event.getMessage().getSender());
+        return this.conversations.get(
+                event.getMessage()
+                        .getConversationId()
+        ).markAcceptance(event.getMessage()
+                .getSender());
     }
 
     private boolean messageConfirmationReceived(final MessageEvent messageEvent) {
-        return this.conversations.get(messageEvent.getMessage().getConversationId()).markConfirmation();
+        return this.conversations.get(
+                messageEvent.getMessage()
+                        .getConversationId()
+        ).markConfirmation();
     }
 
     private boolean messageRejectionReceived(final MessageEvent messageEvent) {
-        return this.conversations.get(messageEvent.getMessage().getConversationId()).markRejection(messageEvent.getMessage().getSender());
+        return this.conversations.get(
+                messageEvent.getMessage()
+                        .getConversationId()
+        ).markRejection(messageEvent.getMessage()
+                .getSender());
     }
 }
