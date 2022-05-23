@@ -97,7 +97,7 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
                 });
     }
 
-
+//Used for testing methods
     public CounterProposalAgent() {
         this(new String[]{});
     }
@@ -115,12 +115,13 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
                         this.game,
                         new HashedPower(this.getMe()),
                         this.getConfirmedDeals(),
-                        new BasicDeal(Collections.emptyList(), Collections.emptyList()))));
+                        new BasicDeal(Collections.emptyList(), Collections.emptyList()))
+        ));
         super.negotiate(negotiationDeadline);
         this.proposalSupplier = null;
         this.previouslyOwned = this.getMe().getOwnedSCs();
         this.getLogger().logln("CounterProposalAgent adjudicator data: " + AdvancedAdjudicator.getData(), true);
-        this.getLogger().logln(String.format("DumbotDecisions data: accepted = %d rejected = %d, DBraneAccept = %d, DBraneReject = %d", PlanCache.getDumbBotAccepts(), PlanCache.getDumbBotRejects(), PlanCache.getPlanIsBetter(), PlanCache.getPlanIsWorse()), true);
+        this.getLogger().logln(String.format("PlanCache data: accepted = %d rejected = %d, Future Accept = %d, Future Reject = %d", PlanCache.getDumbBotAccepts(), PlanCache.getDumbBotRejects(), PlanCache.getPlanIsBetter(), PlanCache.getPlanIsWorse()), true);
         this.getLogger().logln(String.format("Orders received : %s ", Arrays.toString(acceptanceSource.entrySet().toArray())), true);
     }
 
@@ -163,7 +164,7 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
             this.proposalSupplier = new PrioritisedProposalSupplierList(
                     getLogger(),
                     counterProposalProposal,
-//                    new CoordinatedAllianceSupplier(this::getAllies, getTacticalModule(), getGame(), getConfirmedDeals(), getLogger()),
+                    new CoordinatedAllianceSupplier(this::getAllies, getTacticalModule(), getGame(), getConfirmedDeals(), getLogger()),
                     new PlanSupportSupplier(this.planCache::getNoDealAnalysedPlan, this.getNegotiatingPowers(), getLogger())
             );
         }
