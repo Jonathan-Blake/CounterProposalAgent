@@ -13,7 +13,6 @@ import es.csic.iiia.fabregues.dip.board.Game;
 import es.csic.iiia.fabregues.dip.board.Power;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -35,8 +34,9 @@ public class CounterProposalSupplier implements DealGenerator {
     private DiplomacyProposal currentConsideredProposal;
     private BasicDeal currentDeal;
     private DealGenerator currentPlanSupplier;
+    private List<Power> alliance;
 
-    public CounterProposalSupplier(PlanCache planCache, Game game, Logger logger, List<Power> negotiatingPowers, HashedPower me, Supplier<List<BasicDeal>> getCommitments) {
+    public CounterProposalSupplier(PlanCache planCache, Game game, Logger logger, List<Power> negotiatingPowers, HashedPower me, Supplier<List<BasicDeal>> getCommitments, List<Power> alliance) {
         this.planCache = planCache;
         this.game = game;
         this.logger = logger;
@@ -44,6 +44,7 @@ public class CounterProposalSupplier implements DealGenerator {
         this.me = me;
 //        this.tactics = tactics;
         this.getCommitments = getCommitments;
+        this.alliance = alliance;
         this.recievedProposalQueue = new PriorityQueue<>(
                 (a, b) -> this.planCache.getDealComparator().compare((BasicDeal) a.getProposedDeal(), (BasicDeal) b.getProposedDeal())
         );
@@ -58,13 +59,11 @@ public class CounterProposalSupplier implements DealGenerator {
                 currentDeal = (BasicDeal) this.currentConsideredProposal.getProposedDeal();
                 final String proposerId = currentConsideredProposal.getId().substring(0, 3);
                 currentPlanSupplier = new FilteredProposalSupplier(
-                        ((Predicate<BasicDeal>) (proposal -> {
-                            return proposal.getDemilitarizedZones().stream()
-                                    .flatMap(dmz -> dmz.getPowers().stream())
-                                    .anyMatch(power -> power.getName().equals(proposerId)) ||
-                                    proposal.getOrderCommitments().stream()
-                                            .anyMatch(orderCommitment -> orderCommitment.getOrder().getPower().getName().equals(proposerId));
-                        })),
+                        proposal -> proposal.getDemilitarizedZones().stream()
+                                .flatMap(dmz -> dmz.getPowers().stream())
+                                .anyMatch(power -> power.getName().equals(proposerId)) ||
+                                proposal.getOrderCommitments().stream()
+                                        .anyMatch(orderCommitment -> orderCommitment.getOrder().getPower().getName().equals(proposerId)),
                         new FilteredProposalSupplier(
                                 deal -> Utility.Plans.testConsistency(deal, game, getCommitments.get()),
                                 new PrioritisedProposalSupplierList(
@@ -104,8 +103,8 @@ public class CounterProposalSupplier implements DealGenerator {
                 this.game,
                 this.me,
                 this.getCommitments.get(),
-                currentDeal
-        ));
+                currentDeal,
+                this.alliance));
     }
 
     @Override

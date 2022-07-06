@@ -6,7 +6,6 @@ import ddejonge.bandana.negoProtocol.BasicDeal;
 import es.csic.iiia.fabregues.dip.board.Game;
 import es.csic.iiia.fabregues.dip.board.Power;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -19,12 +18,12 @@ public class PlanInfo {
     private final List<HashedPower> allies;
     private String dealId;
 
-    public PlanInfo(Game game, HashedPower me, List<BasicDeal> commitments, BasicDeal deal) {
+    public PlanInfo(Game game, HashedPower me, List<BasicDeal> commitments, BasicDeal deal, List<Power> alliance) {
         this.game = game;
         this.me = me;
         this.deal = deal;
         this.commitments = commitments;
-        this.allies = Collections.emptyList();
+        this.allies = alliance.stream().map(HashedPower::new).collect(Collectors.toList());
     }
 
     public Game getGame() {

@@ -100,7 +100,8 @@ public class PlanSupportSupplier implements DealGenerator {
                         return ret;
                     }
                 }
-            } else if (currentOrder instanceof HLDOrder) {
+            }
+//            else if (currentOrder instanceof HLDOrder) {
 //                HLDOrder hldOrder = (HLDOrder) currentOrder;
 //                if(hldAdjacentSupports == null){
 //                    hldAdjacentSupports = hldOrder.getLocation().getAdjacentRegions().stream()
@@ -116,7 +117,7 @@ public class PlanSupportSupplier implements DealGenerator {
 //                        return ret;
 //                    }
 //                }
-            }
+//            }
             if (this.orderIterator.hasNext()) {
                 currentOrder = this.orderIterator.next();
             } else {
@@ -149,7 +150,8 @@ public class PlanSupportSupplier implements DealGenerator {
 
     private BasicDeal buildSupportOrder(MTOOrder mtoOrder) {
         Region supportRegion = mtoAdjacentTargets.remove(0);
-        if (!mtoOrder.getDestination().getAdjacentRegions().contains(supportRegion)) {
+        if (!mtoOrder.getDestination().getAdjacentRegions().contains(supportRegion)// || !supportRegion.getAdjacentRegions().contains(mtoOrder.getDestination())
+        ) {
             logger.logln("Error:  unit in " + supportRegion.getName() + " cannot reach destination in " + mtoOrder.getDestination() + " to support.");
             return null;
         }

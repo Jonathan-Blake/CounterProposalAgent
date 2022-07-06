@@ -17,7 +17,6 @@ public class FilteredProposalSupplier implements DealGenerator {
         this.supplier = supplier;
         this.predicate = filter;
         iterator = new BasicDealIterator(this::get);
-
     }
 
     private BasicDeal get() {

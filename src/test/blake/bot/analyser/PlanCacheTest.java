@@ -86,7 +86,7 @@ public class PlanCacheTest {
 
         @Override
         public PlanInfo getInfo() {
-            return new PlanInfo(planCache.game, new HashedPower(planCache.game.getPower("ENG")), Collections.emptyList(), new BasicDeal(Collections.emptyList(), Collections.emptyList()));
+            return new PlanInfo(planCache.game, new HashedPower(planCache.game.getPower("ENG")), Collections.emptyList(), new BasicDeal(Collections.emptyList(), Collections.emptyList()), Collections.emptyList());
         }
     }
 

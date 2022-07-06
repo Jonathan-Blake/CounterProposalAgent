@@ -20,10 +20,13 @@ public class PlanCache {
     private static int dumbBotRejects = 0;
     private static int planIsBetter;
     private static int planIsWorse;
+    private static int futureAccepts;
+    private static int futureRejects;
     private final DBraneTactics tactics;
     Power me;
     Game game;
     AnalysedPlan noDealPlan;
+    private AnalysedPlan alliancePlan;
     private List<BasicDeal> commitments;
     private JavaDumbbot dumbBotAnalysis;
     private final Comparator<AnalysedPlan> planComparator = (o1, o2) -> {
@@ -36,6 +39,22 @@ public class PlanCache {
 
     public PlanCache(DBraneTactics tactics) {
         this.tactics = tactics;
+    }
+
+    public static int getFutureAccepts() {
+        return futureAccepts;
+    }
+
+    public static void setFutureAccepts(int dumbBotAccepts) {
+        PlanCache.futureAccepts = dumbBotAccepts;
+    }
+
+    public static int getFutureRejects() {
+        return futureRejects;
+    }
+
+    public static void setFutureRejects(int dumbBotRejects) {
+        PlanCache.futureRejects = dumbBotRejects;
     }
 
     public static int getDumbBotAccepts() {
@@ -90,7 +109,45 @@ public class PlanCache {
         return plans.entrySet().stream()
                 .filter(entry -> entry.getValue().getDeal().equals(basicDeal)).map(Map.Entry::getKey)
                 .findFirst()
-                .orElseGet(() -> analysePlan(new PlanInfo(game, new HashedPower(me), commitments, basicDeal)));
+                .orElseGet(() -> analysePlan(new PlanInfo(game, new HashedPower(me), commitments, basicDeal, Collections.emptyList())));
+    }
+
+    public boolean betterThanAlliancePlan(AnalysedPlan proposal) {
+        final AnalysedPlan currentPlan = this.getAllianceAnalysedPlan();
+        int dbraneComp = Comparator.comparing(AnalysedPlan::getDBraneValue).compare(proposal, currentPlan);
+        int ret;
+        if (dbraneComp != 0) {
+            ret = dbraneComp;
+            if (ret > 0) {
+                PlanCache.incrementPlanIsBetter();
+            } else {
+                PlanCache.incrementPlanIsWorse();
+            }
+            System.out.println(" following DBrane comp " + proposal.getDBraneValue() + " " + currentPlan.getDBraneValue());
+        } else {
+            ret = Integer.compare(
+                    tactics.determineBestPlan(
+                            AdvancedAdjudicator.advanceToMovementPhase(proposal.getExpectedResult()),
+                            this.me,
+                            proposal.getInfo().getCommitments()
+                    ).getValue(),
+                    tactics.determineBestPlan(
+                            AdvancedAdjudicator.advanceToMovementPhase(currentPlan.getExpectedResult()),
+                            this.me,
+                            currentPlan.getInfo().getCommitments()
+                    ).getValue());
+            if (ret > 0) {
+                setFutureAccepts(getFutureAccepts() + 1);
+            } else {
+                setFutureRejects(getFutureRejects() + 1);
+            }
+        }
+
+        return ret > 0;
+    }
+
+    private AnalysedPlan getAllianceAnalysedPlan() {
+        return this.alliancePlan;
     }
 
     public boolean betterThanNoDeal(AnalysedPlan proposal) {
@@ -106,15 +163,7 @@ public class PlanCache {
             }
             System.out.println(" following DBrane comp " + proposal.getDBraneValue() + " " + currentPlan.getDBraneValue());
         } else {
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
             ret = Integer.compare(
-//            		proposal.getDumbbotValue(this.dumbBotAnalysis),
-//            		(int) (currentPlan.getDumbbotValue(this.dumbBotAnalysis) *1.0)
-//            		);
                     tactics.determineBestPlan(
                             AdvancedAdjudicator.advanceToMovementPhase(proposal.getExpectedResult()),
                             this.me,
@@ -126,11 +175,22 @@ public class PlanCache {
                             currentPlan.getInfo().getCommitments()
                     ).getValue());
             if (ret > 0) {
-                setDumbBotAccepts(getDumbBotAccepts() + 1);
+                setFutureAccepts(getFutureAccepts() + 1);
             } else {
-                setDumbBotRejects(getDumbBotRejects() + 1);
+                setFutureRejects(getFutureRejects() + 1);
             }
         }
+//        if(ret ==0 ){
+//            ret = Integer.compare(
+//                    proposal.getDumbbotValue(calculateDumbbot(proposal.getExpectedResult())),
+//                    currentPlan.getDumbbotValue(calculateDumbbot(currentPlan.getExpectedResult())));
+//
+//            if (ret > 0) {
+//                setDumbBotAccepts(getDumbBotAccepts() + 1);
+//            } else {
+//                setDumbBotRejects(getDumbBotRejects() + 1);
+//            }
+//        }
 
         return ret > 0;
     }
@@ -185,4 +245,50 @@ public class PlanCache {
         return this.noDealPlan;
     }
 
+    public AnalysedPlan getAlliancePlan() {
+        return this.alliancePlan;
+    }
+
+    public void setAlliancePlan(AnalysedPlan analysePlan) {
+        this.alliancePlan = analysePlan;
+    }
+
+    public boolean betterOrEqualAllianceDeal(AnalysedPlan proposal) {
+        final AnalysedPlan currentPlan = this.getAlliancePlan();
+        int dbraneComp = Comparator.comparing(AnalysedPlan::getDBraneValue).compare(proposal, currentPlan);
+        int ret;
+        if (dbraneComp != 0) {
+            ret = dbraneComp;
+//            if (ret > 0) {
+//                PlanCache.incrementPlanIsBetter();
+//            } else {
+//                PlanCache.incrementPlanIsWorse();
+//            }
+            System.out.println(" following DBrane comp for alliance " + proposal.getDBraneValue() + " " + currentPlan.getDBraneValue());
+        } else {
+            ret = Integer.compare(
+                    tactics.determineBestPlan(
+                            AdvancedAdjudicator.advanceToMovementPhase(proposal.getExpectedResult()),
+                            this.me,
+                            proposal.getInfo().getCommitments()
+                    ).getValue(),
+                    tactics.determineBestPlan(
+                            AdvancedAdjudicator.advanceToMovementPhase(currentPlan.getExpectedResult()),
+                            this.me,
+                            currentPlan.getInfo().getCommitments()
+                    ).getValue());
+//            if (ret > 0) {
+//                setDumbBotAccepts(getDumbBotAccepts() + 1);
+//            } else {
+//                setDumbBotRejects(getDumbBotRejects() + 1);
+//            }
+            if (ret == 0) {
+                ret = Integer.compare(
+                        proposal.getDumbbotValue(new JavaDumbbot(proposal.getInfo().getGame(), proposal.getInfo().getMe().asPower(), false)),
+                        currentPlan.getDumbbotValue(new JavaDumbbot(currentPlan.getInfo().getGame(), currentPlan.getInfo().getMe().asPower(), false)));
+            }
+        }
+
+        return ret >= 0;
+    }
 }

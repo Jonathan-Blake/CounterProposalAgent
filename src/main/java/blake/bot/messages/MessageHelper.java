@@ -76,10 +76,14 @@ public class MessageHelper {
     }
 
     private boolean messageConfirmationReceived(final MessageEvent messageEvent) {
-        return this.conversations.get(
+        ConversationInfo conv = this.conversations.get(
                 messageEvent.getMessage()
                         .getConversationId()
-        ).markConfirmation();
+        );
+        if (conv == null) {
+            return true;
+        }
+        return conv.markConfirmation();
     }
 
     private boolean messageRejectionReceived(final MessageEvent messageEvent) {

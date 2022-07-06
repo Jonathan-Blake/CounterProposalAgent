@@ -36,12 +36,14 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
     private DealGenerator proposalSupplier;
     private List<Province> previouslyOwned;
     private RelationshipMatrix<Double> relationshipMatrix;
+    private boolean isFirstTurn;
 
     public CounterProposalAgent(String[] args) {
         super(args);
         this.planCache = new PlanCache(this.getTacticalModule());
         this.messageHelper = new MessageHelper();
         acceptanceSource = new HashMap<>();
+        this.isFirstTurn = true;
         MessageEventChannels.RECEIVING_PROPOSAL.subscribe(
                 event -> {
                     Message receivedMessage = event.getMessage();
@@ -53,29 +55,33 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
                                         this.game,
                                         new HashedPower(this.getMe()),
                                         this.getConfirmedDeals(),
-                                        deal
-                                )
+                                        deal,
+                                        Collections.emptyList())
                         );
                         newPlan.getInfo().setDealId(receivedProposal.getId());
 
-                        if (newPlan.getDBraneValue() - planCache.getNoDealAnalysedPlan().getDBraneValue() == 0
-                                && this.planCache.getNoDealPlan().getMyOrders().containsAll(newPlan.getPlan().getMyOrders())
-                                && this.getAllies().contains(this.game.getPower(receivedMessage.getSender()))
-                        ) {
-                            this.getLogger().logln("APDAgent.negotiate() Accepted proposal (same orders) from " + receivedMessage.getSender() + ": " + receivedProposal, true);
-                            this.getLogger().logln("My plan was " + this.planCache.getNoDealPlan().getMyOrders(), true);
-                            this.getLogger().logln("The proposal was " + newPlan.getPlan().getMyOrders(), true);
-                            this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
-                            this.acceptProposal(receivedProposal.getId());
-                            this.acceptanceSource.merge("Orders are the same", 1, Integer::sum);
-                        } else if (planCache.betterThanNoDeal(newPlan)) {
-                            this.acceptProposal(receivedProposal.getId());
+                        if (planCache.betterThanNoDeal(newPlan)) {
+//                          this.acceptProposal(receivedProposal.getId());
                             this.acceptanceSource.merge("Plan is better", 1, Integer::sum);
                             this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
                             this.getLogger().logln("APDAgent.negotiate() Accepted proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+                        } else if (
+                                newPlan.getDBraneValue() - this.planCache.getNoDealAnalysedPlan().getDBraneValue() == 0
+                                        && (this.planCache.getNoDealPlan().getMyOrders().containsAll(newPlan.getPlan().getMyOrders())
+                                        || this.getAllies().contains(this.game.getPower(receivedMessage.getSender())))
+                        ) {
+                            this.getLogger().logln("APDAgent.negotiate() Accepted proposal (same orders or ally) from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+                            this.getLogger().logln("My plan was " + this.planCache.getNoDealPlan().getMyOrders(), true);
+                            this.getLogger().logln("The proposal was " + newPlan.getPlan().getMyOrders(), true);
+                            this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
+//                            this.acceptProposal(receivedProposal.getId());
+                            this.acceptanceSource.merge("Orders are the same", 1, Integer::sum);
                         } else if (newPlan.getDBraneValue() - planCache.getNoDealAnalysedPlan().getDBraneValue() == 0) {
 //                            this.acceptProposal(receivedProposal.getId());
                             this.acceptanceSource.merge("Plan is not worse", 1, Integer::sum);
+                            if (this.counterProposalProposal == null) {
+                                this.getProposalSupplier();
+                            }
                             this.counterProposalProposal.addOffer(receivedProposal);
                             this.rejectProposal(receivedProposal.getId());
 //                            this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
@@ -85,16 +91,28 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
 //                            this.counterProposalProposal.addOffer(receivedProposal);
                             this.acceptanceSource.merge("Plan Rejected", 1, Integer::sum);
                             this.getLogger().logln("APDAgent.negotiate() Rejected proposal from " + receivedMessage.getSender() + ": " + receivedProposal);
+
+//                            if(this.counterProposalProposal == null) {
+//                            	this.getProposalSupplier();
+//                            }
+//                            this.counterProposalProposal.addOffer(receivedProposal);
                             this.rejectAndDislikeProposal(receivedProposal.getId(), receivedMessage.getSender());
                         }
                     } else {
                         this.acceptanceSource.merge("Plan is inconsistent", 1, Integer::sum);
                         this.getLogger().logln("APDAgent.negotiate() Rejected proposal from " + receivedMessage.getSender() + ": " + receivedProposal);
-                        this.rejectAndDislikeProposal(receivedProposal.getId(), receivedMessage.getSender());
-//                        this.rejectProposal(receivedProposal.getId());
+                        this.rejectProposal(receivedProposal.getId());
                     }
                     return true;
                 });
+        MessageEventChannels.RECEIVING_ACCEPTANCE.subscribe((event -> {
+            DiplomacyProposal proposal = (DiplomacyProposal) event.getMessage().getContent();
+            if (proposal.getId().contains(this.me.getName())) {
+                this.getLogger().logln("My proposal " + proposal.getId() + " was accepted by " + event.getMessage().getSender());
+                this.like(event.getMessage().getSender());
+            }
+            return true;
+        }));
     }
 
 //Used for testing methods
@@ -110,18 +128,26 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
     @Override
     public void negotiate(long negotiationDeadline) {
         this.planCache.setNextTurn(this.getGame(), this.getMe(), this.getConfirmedDeals());
+        final PlanInfoBuilder planInfoBuilder = new PlanInfoBuilder()
+                .game(this.game)
+                .me(new HashedPower(this.getMe()))
+                .commitments(this.getConfirmedDeals())
+                .deal(new BasicDeal(Collections.emptyList(), Collections.emptyList()));
         this.planCache.setNoDealPlan(this.planCache.analysePlan(
-                new PlanInfo(
-                        this.game,
-                        new HashedPower(this.getMe()),
-                        this.getConfirmedDeals(),
-                        new BasicDeal(Collections.emptyList(), Collections.emptyList()))
+                planInfoBuilder
+                        .build()
         ));
-        super.negotiate(negotiationDeadline);
+        this.planCache.setAlliancePlan(this.planCache.analysePlan(
+                planInfoBuilder
+                        .alliance(this.getAllies())
+                        .build()
+        ));
+        super.negotiate(negotiationDeadline - 100);
         this.proposalSupplier = null;
         this.previouslyOwned = this.getMe().getOwnedSCs();
+        this.isFirstTurn = false;
         this.getLogger().logln("CounterProposalAgent adjudicator data: " + AdvancedAdjudicator.getData(), true);
-        this.getLogger().logln(String.format("PlanCache data: accepted = %d rejected = %d, Future Accept = %d, Future Reject = %d", PlanCache.getDumbBotAccepts(), PlanCache.getDumbBotRejects(), PlanCache.getPlanIsBetter(), PlanCache.getPlanIsWorse()), true);
+        this.getLogger().logln(String.format("PlanCache data: accepted = %d rejected = %d, Future Accept = %d, Future Reject = %d, DB Accept = %d, DB Reject = %d", PlanCache.getPlanIsBetter(), PlanCache.getPlanIsWorse(), PlanCache.getFutureAccepts(), PlanCache.getFutureRejects(), PlanCache.getDumbBotAccepts(), PlanCache.getDumbBotRejects()), true);
         this.getLogger().logln(String.format("Orders received : %s ", Arrays.toString(acceptanceSource.entrySet().toArray())), true);
     }
 
@@ -160,12 +186,18 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
     @Override
     protected DealGenerator getProposalSupplier() {
         if (proposalSupplier == null) {
-            this.counterProposalProposal = new CounterProposalSupplier(planCache, game, getLogger(), getNegotiatingPowers(), new HashedPower(this.getMe()), this::getConfirmedDeals);
+            this.counterProposalProposal = new CounterProposalSupplier(planCache, game, getLogger(), getNegotiatingPowers(), new HashedPower(this.getMe()), this::getConfirmedDeals, this.getAllies());
             this.proposalSupplier = new PrioritisedProposalSupplierList(
                     getLogger(),
                     counterProposalProposal,
-                    new CoordinatedAllianceSupplier(this::getAllies, getTacticalModule(), getGame(), getConfirmedDeals(), getLogger()),
-                    new PlanSupportSupplier(this.planCache::getNoDealAnalysedPlan, this.getNegotiatingPowers(), getLogger())
+//                    new CoordinatedAllianceSupplier(this::getAllies, getTacticalModule(), getGame(), getConfirmedDeals(), getLogger()),
+//                    new PeaceDealSupplier(this.isFirstTurn, this.getAllies(), this.getMe(), this.getGame()),
+//                    new PlanSupportSupplier(this.planCache::getAlliancePlan, this.getNegotiatingPowers(), getLogger()),
+                    new PlanSupportSupplier(this.planCache::getNoDealAnalysedPlan, this.getNegotiatingPowers(), getLogger())//,
+//                    new CyclingProposalSupplierList(
+//                            new CombinedAttackSupplier(this.me, this.getAllies(), this.getNegotiatingPowers(), this.getGame(), this.getTacticalModule(), this.planCache.getNoDealPlan(), this.getConfirmedDeals()),
+//                            new MutualSupportSupplier(this.getConfirmedDeals(), this.getTacticalModule(), this.getGame(), this.me, this.getAllies(), this.getLogger())
+//                    )
             );
         }
 //        getLogger().logln("Retrieving Proposal Supplier " + this.proposalSupplier,true);
@@ -174,7 +206,6 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
 
     @Override
     public void start() {
-
     }
 
     @Override
@@ -210,6 +241,12 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
 
     private void acceptAndClearInconsistentPlans(String id, String sender, List<BasicDeal> newCommitments) {
         this.acceptProposal(id);
+        this.getUnconfirmedProposals().forEach(proposal -> {
+            final BasicDeal deal = (BasicDeal) proposal.getProposedDeal();
+            if (!Utility.Plans.testConsistency(deal, this.getGame(), newCommitments)) {
+                rejectProposal(proposal.getId());
+            }
+        });
         this.like(sender);
         this.planCache.removePlan(PlanInfoMatcher.stillConsistent(newCommitments).negate());
     }
