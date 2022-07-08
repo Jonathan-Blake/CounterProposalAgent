@@ -1,0 +1,109 @@
+{
+  "plans": [
+    {
+      "name": "GER Bliz, Hol version",
+      "weight": 10,
+      "targets": [
+        "Eng"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "KIEFLT",
+          "dest": "HOLFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "BERAMY",
+          "dest": "KIEAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "MUNAMY",
+          "dest": "RUHAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "MOSAMY",
+          "dest": "STPAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "GER",
+          "location": "RUHAMY",
+          "dest": "BELAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "RUS",
+          "location": "STPAMY",
+          "dest": "NWYAMY"
+        }
+      ],
+      "dmzs": [
+      ]
+    },
+    {
+      "name": "Go South Russia",
+      "weight": 9,
+      "targets": [
+        "TUR"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "MOSAMY",
+          "dest": "SEVAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "SEVFLT",
+          "dest": "BLAFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "WARAMY",
+          "dest": "UKRAMY"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "SPR",
+          "powers": [
+            "GER"
+          ],
+          "provinces": [
+            "SIL",
+            "PRU"
+          ]
+        }
+      ]
+    }
+  ]
+}

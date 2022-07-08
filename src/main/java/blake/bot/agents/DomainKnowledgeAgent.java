@@ -4,10 +4,8 @@ import blake.bot.analyser.*;
 import blake.bot.messages.MessageEvent;
 import blake.bot.messages.MessageEventChannels;
 import blake.bot.messages.MessageHelper;
-import blake.bot.suppliers.CounterProposalSupplier;
-import blake.bot.suppliers.DealGenerator;
-import blake.bot.suppliers.PlanSupportSupplier;
-import blake.bot.suppliers.PrioritisedProposalSupplierList;
+import blake.bot.suppliers.*;
+import blake.bot.suppliers.strategies.StrategyPlan;
 import blake.bot.utility.HashedPower;
 import blake.bot.utility.Relationship;
 import blake.bot.utility.RelationshipMatrix;
@@ -22,7 +20,7 @@ import es.csic.iiia.fabregues.dip.orders.Order;
 
 import java.util.*;
 
-public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
+public class DomainKnowledgeAgent extends AbstractNegotiationLoopNegotiator {
 
     public static final double DISLIKE_PROBABILITY_IF_FALSE = 0.9;
     public static final double DISLIKE_LIKELIHOOD = 0.1;
@@ -37,8 +35,9 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
     private List<Province> previouslyOwned;
     private RelationshipMatrix<Double> relationshipMatrix;
     private boolean isFirstTurn;
+    private PregenStrategySupplier preGenPlanSupplier;
 
-    public CounterProposalAgent(String[] args) {
+    public DomainKnowledgeAgent(String[] args) {
         super(args);
         this.planCache = new PlanCache(this.getTacticalModule());
         this.messageHelper = new MessageHelper();
@@ -60,17 +59,29 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
                         );
                         newPlan.getInfo().setDealId(receivedProposal.getId());
 
+                        Optional<StrategyPlan> strategy;
                         if (planCache.betterThanNoDeal(newPlan)) {
-//                          this.acceptProposal(receivedProposal.getId());
                             this.acceptanceSource.merge("Plan is better", 1, Integer::sum);
                             this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
-                            this.getLogger().logln("APDAgent.negotiate() Accepted proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+                            this.getLogger().logln("DKAAgent.negotiate() Accepted proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+                        } else if (preGenPlanSupplier != null && (strategy = preGenPlanSupplier.match(deal)).isPresent()) {
+                            final StrategyPlan strategyPlan = strategy.get();
+                            this.getLogger().logln("DKAgent.negotiate() Recognised incoming pre-generated plan " + strategyPlan.name);
+                            if (strategyPlan.targets().contains(this.me.getName())) {
+                                this.getLogger().logln("But I am the target", true);
+                                this.rejectAndDislikeProposal(receivedProposal.getId(), receivedMessage.getSender());
+                                this.acceptanceSource.merge("Target of pregenerated Strategy " + strategyPlan.name, 1, Integer::sum);
+                            } else {
+                                this.getLogger().logln("Accepting", true);
+                                this.acceptanceSource.merge("Pregenerated Strategy " + strategyPlan.name, 1, Integer::sum);
+                                this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
+                            }
                         } else if (
                                 newPlan.getDBraneValue() - this.planCache.getNoDealAnalysedPlan().getDBraneValue() == 0
                                         && (this.planCache.getNoDealPlan().getMyOrders().containsAll(newPlan.getPlan().getMyOrders())
                                         || this.getAllies().contains(this.game.getPower(receivedMessage.getSender())))
                         ) {
-                            this.getLogger().logln("APDAgent.negotiate() Accepted proposal (same orders or ally) from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+                            this.getLogger().logln("DKAAgent.negotiate() Accepted proposal (same orders or ally) from " + receivedMessage.getSender() + ": " + receivedProposal, true);
                             this.getLogger().logln("My plan was " + this.planCache.getNoDealPlan().getMyOrders(), true);
                             this.getLogger().logln("The proposal was " + newPlan.getPlan().getMyOrders(), true);
                             this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
@@ -85,43 +96,37 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
                             this.counterProposalProposal.addOffer(receivedProposal);
                             this.rejectProposal(receivedProposal.getId());
 //                            this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
-                            this.getLogger().logln("APDAgent.negotiate() CounterPropose proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+                            this.getLogger().logln("DKAAgent.negotiate() CounterPropose proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
                         } else {
-//                            this.rejectProposal(receivedProposal.getId());
-//                            this.counterProposalProposal.addOffer(receivedProposal);
                             this.acceptanceSource.merge("Plan Rejected", 1, Integer::sum);
-                            this.getLogger().logln("APDAgent.negotiate() Rejected proposal from " + receivedMessage.getSender() + ": " + receivedProposal);
-
-//                            if(this.counterProposalProposal == null) {
-//                            	this.getProposalSupplier();
-//                            }
-//                            this.counterProposalProposal.addOffer(receivedProposal);
+                            this.getLogger().logln("DKAAgent.negotiate() Rejected proposal from " + receivedMessage.getSender() + ": " + receivedProposal);
                             this.rejectAndDislikeProposal(receivedProposal.getId(), receivedMessage.getSender());
                         }
                     } else {
                         this.acceptanceSource.merge("Plan is inconsistent", 1, Integer::sum);
-                        this.getLogger().logln("APDAgent.negotiate() Rejected proposal from " + receivedMessage.getSender() + ": " + receivedProposal);
+                        this.getLogger().logln("DKAAgent.negotiate() Rejected proposal from " + receivedMessage.getSender() + ": " + receivedProposal);
                         this.rejectProposal(receivedProposal.getId());
                     }
                     return true;
                 });
+
         MessageEventChannels.RECEIVING_ACCEPTANCE.subscribe((event -> {
             DiplomacyProposal proposal = (DiplomacyProposal) event.getMessage().getContent();
             if (proposal.getId().contains(this.me.getName())) {
-                this.getLogger().logln("My proposal " + proposal.getId() + " was accepted by " + event.getMessage().getSender());
+                this.getLogger().logln("My proposal " + proposal.getId() + " was accepted by " + event.getMessage().getSender(), true);
                 this.like(event.getMessage().getSender());
             }
             return true;
         }));
     }
 
-//Used for testing methods
-    public CounterProposalAgent() {
+    //Used for testing methods
+    public DomainKnowledgeAgent() {
         this(new String[]{});
     }
 
     public static void main(String[] args) {
-        CounterProposalAgent myPlayer = new CounterProposalAgent(args);
+        DomainKnowledgeAgent myPlayer = new DomainKnowledgeAgent(args);
         myPlayer.run();
     }
 
@@ -146,7 +151,7 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
         this.proposalSupplier = null;
         this.previouslyOwned = this.getMe().getOwnedSCs();
         this.isFirstTurn = false;
-        this.getLogger().logln("CounterProposalAgent adjudicator data: " + AdvancedAdjudicator.getData(), true);
+        this.getLogger().logln("DomainKnowledgeAgent adjudicator data: " + AdvancedAdjudicator.getData(), true);
         this.getLogger().logln(String.format("PlanCache data: accepted = %d rejected = %d, Future Accept = %d, Future Reject = %d, DB Accept = %d, DB Reject = %d", PlanCache.getPlanIsBetter(), PlanCache.getPlanIsWorse(), PlanCache.getFutureAccepts(), PlanCache.getFutureRejects(), PlanCache.getDumbBotAccepts(), PlanCache.getDumbBotRejects()), true);
         this.getLogger().logln(String.format("Orders received : %s ", Arrays.toString(acceptanceSource.entrySet().toArray())), true);
     }
@@ -159,48 +164,50 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
 //            //Rejected my proposal
 //        }
 //        this.planCache.removePlan(PlanInfoMatcher.dealId(receivedMessage.getMessageId()));
-        this.getLogger().logln("CounterProposalAgent.negotiate() Received rejection from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+        this.getLogger().logln("DomainKnowledgeAgent.negotiate() Received rejection from " + receivedMessage.getSender() + ": " + receivedProposal, true);
     }
 
     @Override
     protected void handleConfirmationMessage(Message receivedMessage) {
         MessageEventChannels.RECEIVING_CONFIRMATION.publish(new MessageEvent(receivedMessage));
         DiplomacyProposal receivedProposal = (DiplomacyProposal) receivedMessage.getContent();
-        this.getLogger().logln("CounterProposalAgent.negotiate() Received confirmation from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+        this.getLogger().logln("DomainKnowledgeAgent.negotiate() Received confirmation from " + receivedMessage.getSender() + ": " + receivedProposal, true);
     }
 
     @Override
     protected void handleProposalMessage(Message receivedMessage) {
         MessageEventChannels.RECEIVING_PROPOSAL.publish(new MessageEvent(receivedMessage));
         DiplomacyProposal receivedProposal = (DiplomacyProposal) receivedMessage.getContent();
-        this.getLogger().logln("CounterProposalAgent.negotiate() Received proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+        this.getLogger().logln("DomainKnowledgeAgent.negotiate() Received proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
     }
 
     @Override
     protected void handleAcceptanceMessage(Message receivedMessage) {
         MessageEventChannels.RECEIVING_ACCEPTANCE.publish(new MessageEvent(receivedMessage));
         DiplomacyProposal receivedProposal = (DiplomacyProposal) receivedMessage.getContent();
-        this.getLogger().logln("APDAgent.negotiate() Received acceptance from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+        this.getLogger().logln("DKAAgent.negotiate() Received acceptance from " + receivedMessage.getSender() + ": " + receivedProposal, true);
     }
 
     @Override
     protected DealGenerator getProposalSupplier() {
         if (proposalSupplier == null) {
             this.counterProposalProposal = new CounterProposalSupplier(planCache, game, getLogger(), getNegotiatingPowers(), new HashedPower(this.getMe()), this::getConfirmedDeals, this.getAllies());
-            this.proposalSupplier = new PrioritisedProposalSupplierList(
-                    getLogger(),
-                    counterProposalProposal,
-//                    new CoordinatedAllianceSupplier(this::getAllies, getTacticalModule(), getGame(), getConfirmedDeals(), getLogger()),
-//                    new PeaceDealSupplier(this.isFirstTurn, this.getAllies(), this.getMe(), this.getGame()),
-//                    new PlanSupportSupplier(this.planCache::getAlliancePlan, this.getNegotiatingPowers(), getLogger()),
-                    new PlanSupportSupplier(this.planCache::getNoDealAnalysedPlan, this.getNegotiatingPowers(), getLogger())//,
-//                    new CyclingProposalSupplierList(
-//                            new CombinedAttackSupplier(this.me, this.getAllies(), this.getNegotiatingPowers(), this.getGame(), this.getTacticalModule(), this.planCache.getNoDealPlan(), this.getConfirmedDeals()),
-//                            new MutualSupportSupplier(this.getConfirmedDeals(), this.getTacticalModule(), this.getGame(), this.me, this.getAllies(), this.getLogger())
-//                    )
-            );
+            if (this.isFirstTurn) {
+                preGenPlanSupplier = new PregenStrategySupplier(this.getGame(), this.getMe(), this.getNegotiatingPowers(), getLogger());
+                this.proposalSupplier = new PrioritisedProposalSupplierList(
+                        getLogger(),
+                        counterProposalProposal,
+                        preGenPlanSupplier,
+                        new PlanSupportSupplier(this.planCache::getNoDealAnalysedPlan, this.getNegotiatingPowers(), getLogger())
+                );
+            } else {
+                this.proposalSupplier = new PrioritisedProposalSupplierList(
+                        getLogger(),
+                        counterProposalProposal,
+                        new PlanSupportSupplier(this.planCache::getNoDealAnalysedPlan, this.getNegotiatingPowers(), getLogger())
+                );
+            }
         }
-//        getLogger().logln("Retrieving Proposal Supplier " + this.proposalSupplier,true);
         return this.proposalSupplier;
     }
 
@@ -288,7 +295,7 @@ public class CounterProposalAgent extends AbstractNegotiationLoopNegotiator {
                                     DISLIKE_PROBABILITY_IF_FALSE,
                                     DISLIKE_LIKELIHOOD
                             )));
-            this.getLogger().logln(String.format("CounterProposal Agent dislikes %s : %s -> %s", power.getName(), currentRelationship.get(), this.getRelationshipMatrix().getRelationship(power)));
+            this.getLogger().logln(String.format("DomainKnowlege Agent dislikes %s : %s -> %s", power.getName(), currentRelationship.get(), this.getRelationshipMatrix().getRelationship(power)));
         });
     }
 

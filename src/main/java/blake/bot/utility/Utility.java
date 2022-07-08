@@ -31,6 +31,14 @@ public class Utility {
             if (power == null || other == null) throw new AssertionError();
             return power.getName().equals(other.getName());
         }
+
+        public static List<Power> stringToPower(List<String> powers, Game game) {
+            return powers.stream().map(game::getPower).collect(Collectors.toList());
+        }
+
+        public static List<Province> stringToRegion(List<String> provinces, Game game) {
+            return provinces.stream().map(game::getProvince).collect(Collectors.toList());
+        }
     }
 
     public static class Dates {
@@ -193,6 +201,9 @@ public class Utility {
             if (!outDated) {
                 commitments.add(deal);
                 consistencyReport = Utilities.testConsistency(game, commitments);
+                if (consistencyReport != null) {
+                    System.out.println(consistencyReport);
+                }
             }
             return !outDated && consistencyReport == null;
         }
@@ -288,6 +299,18 @@ public class Utility {
         public static Double bayes(final Double prior, final double probabilityIfFalse, final double likelihood) {
             final double v = prior * likelihood;
             return v / (v + (1 - prior) * probabilityIfFalse);
+        }
+    }
+
+    public static class Deals {
+        private Deals() {
+        }
+
+        public static boolean areIdentical(BasicDeal deal, BasicDeal other) {
+            return deal.getDemilitarizedZones().size() == other.getDemilitarizedZones().size()
+                    && Utility.Lists.mapList(deal.getDemilitarizedZones(), DMZ::toString).containsAll(Utility.Lists.mapList(other.getDemilitarizedZones(), DMZ::toString))
+                    && deal.getOrderCommitments().size() == other.getOrderCommitments().size()
+                    && Utility.Lists.mapList(deal.getOrderCommitments(), OrderCommitment::toString).containsAll(Utility.Lists.mapList(other.getOrderCommitments(), OrderCommitment::toString));
         }
     }
 }

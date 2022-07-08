@@ -1,0 +1,77 @@
+{
+  "plans": [
+    {
+      "name": "DON'T BOUNCE ENGLAND",
+      "weight": 10,
+      "targets": [
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "EDIFLT",
+          "dest": "NTHFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "LONFLT",
+          "dest": "ECHFLT"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "SPR",
+          "powers": [
+            "RUS"
+          ],
+          "provinces": [
+            "LON"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Uncontested Norway",
+      "weight": 10,
+      "targets": [
+        "RUS"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "EDIFLT",
+          "dest": "NTHFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "ENG",
+          "location": "NTHFLT",
+          "dest": "NWYFLT"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "AUT",
+          "powers": [
+            "RUS"
+          ],
+          "provinces": [
+            "NWY"
+          ]
+        }
+      ]
+    }
+  ]
+}

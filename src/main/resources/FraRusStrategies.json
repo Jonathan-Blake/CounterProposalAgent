@@ -1,0 +1,101 @@
+{
+  "plans": [
+    {
+      "name": "FRA Bur Opening Norwegian conflict",
+      "weight": 10,
+      "targets": [
+        "GER",
+        "ENG"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "BREFLT",
+          "dest": "MAOFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "MARAMY",
+          "dest": "SPAAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "PARAMY",
+          "dest": "BURAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "MOSAMY",
+          "dest": "STPAMY"
+        }
+      ],
+      "dmzs": []
+    },
+    {
+      "name": "Rus Octopus",
+      "weight": 10,
+      "targets": [
+        "ENG",
+        "TUR"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "STPSCS",
+          "dest": "GOBFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "MOSAMY",
+          "dest": "STPAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "WARAMY",
+          "dest": "GALAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "SEVFLT",
+          "dest": "BLAFLT"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "SPR",
+          "powers": [
+            "FRA"
+          ],
+          "provinces": [
+            "MOS"
+          ]
+        }
+      ]
+    }
+  ]
+}

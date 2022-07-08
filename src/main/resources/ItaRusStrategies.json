@@ -1,0 +1,30 @@
+{
+  "plans": [
+    {
+      "name": "Rus Ita Kill Austria",
+      "weight": 10,
+      "targets": [
+        "AUS"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "WARAMY",
+          "dest": "GALAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ITA",
+          "location": "VENAMY",
+          "dest": "TYRAMY"
+        }
+      ],
+      "dmzs": []
+    }
+  ]
+}

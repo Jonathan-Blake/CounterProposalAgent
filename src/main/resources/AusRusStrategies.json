@@ -1,0 +1,155 @@
+{
+  "plans": [
+    {
+      "name": "Rus Tur Attack",
+      "weight": 10,
+      "targets": [
+        "TUR"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "WARAMY",
+          "dest": "UKRAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "SEVFLT",
+          "dest": "BLAFLT"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "SPR",
+          "powers": [
+            "AUS"
+          ],
+          "provinces": [
+            "GAL"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Rus Aus Balkans Division",
+      "weight": 10,
+      "targets": [
+        "TUR"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "WARAMY",
+          "dest": "UKRAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "SEVFLT",
+          "dest": "BLAFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "AUS",
+          "location": "BUDAMY",
+          "dest": "SERAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "RUS",
+          "location": "TRIFLT",
+          "dest": "ALBFLT"
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "RUS",
+          "loc": "BLAFLT",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "RUS",
+            "location": "UKRAMY",
+            "dest": "RUMAMY"
+          }
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "RUS",
+          "loc": "SEVFLT",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "RUS",
+            "location": "UKRAMY",
+            "dest": "RUMAMY"
+          }
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "RUS",
+          "location": "UKRAMY",
+          "dest": "RUMAMY"
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "AUS",
+          "loc": "SERAMY",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "AUS",
+            "location": "ALBFLT",
+            "dest": "GREFLT"
+          }
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "AUS",
+          "location": "ALBFLT",
+          "dest": "GREFLT"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "SPR",
+          "powers": [
+            "AUS"
+          ],
+          "provinces": [
+            "GAL"
+          ]
+        }
+      ]
+    }
+  ]
+}

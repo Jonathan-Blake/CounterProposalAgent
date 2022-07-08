@@ -1,0 +1,145 @@
+{
+  "plans": [
+    {
+      "name": "Eng Ger -> Fra Attack",
+      "weight": 10,
+      "targets": [
+        "FRA"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "LONFLT",
+          "dest": "ECHFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "EDIFLT",
+          "dest": "NTHFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "ENG",
+          "location": "ECHFLT",
+          "dest": "BREFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "ENG",
+          "location": "NTHFLT",
+          "dest": "NWYFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "KIEFLT",
+          "dest": "HOLFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "BERAMY",
+          "dest": "KIEAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "MUNAMY",
+          "dest": "BURAMY"
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "GER",
+          "loc": "HOLFLT",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "GER",
+            "location": "BURAMY",
+            "dest": "BELAMY"
+          }
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "KIEAMY",
+          "dest": "DENAMY"
+        }
+      ],
+      "dmzs": [
+      ]
+    },
+    {
+      "name": "Eng Ger -> Rus Attack",
+      "weight": 10,
+      "targets": [
+        "RUS"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "LONFLT",
+          "dest": "NTHFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "EDIFLT",
+          "dest": "NWGFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "ENG",
+          "location": "NWGFLT",
+          "dest": "NWYFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "KIEFLT",
+          "dest": "DENFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "DENFLT",
+          "dest": "SWEFLT"
+        }
+      ],
+      "dmzs": [
+      ]
+    }
+  ]
+}

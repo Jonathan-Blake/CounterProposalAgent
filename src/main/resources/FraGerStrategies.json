@@ -1,0 +1,105 @@
+{
+  "plans": [
+    {
+      "name": "FRA GER Eng Attack",
+      "weight": 10,
+      "targets": [
+        "ENG"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "BREFLT",
+          "dest": "ECHFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "PARAMY",
+          "dest": "PICAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "MUNAMY",
+          "dest": "RUHAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "KIEFLT",
+          "dest": "DENFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "BERAMY",
+          "dest": "KIEAMY"
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "GER",
+          "loc": "RUHAMY",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "GER",
+            "location": "KIEAMY",
+            "dest": "HOLAMY"
+          }
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "FRA",
+          "loc": "ECHFLT",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "FRA",
+            "location": "PICAMY",
+            "dest": "BELAMY"
+          }
+        },
+        {
+          "type": "BLD",
+          "year": 1901,
+          "phase": "FAL",
+          "power": "FRA",
+          "region": "BREFLT"
+        },
+        {
+          "type": "BLD",
+          "year": 1901,
+          "phase": "FAL",
+          "power": "FRA",
+          "region": "MARFLT"
+        },
+        {
+          "type": "BLD",
+          "year": 1901,
+          "phase": "FAL",
+          "power": "GER",
+          "region": "KIEFLT"
+        }
+      ],
+      "dmzs": []
+    }
+  ]
+}

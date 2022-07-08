@@ -1,0 +1,40 @@
+{
+  "plans": [
+    {
+      "name": "DON'T BOUNCE ENGLAND",
+      "weight": 10,
+      "targets": [
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "EDIFLT",
+          "dest": "NWGFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "LONFLT",
+          "dest": "NTHFLT"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "SPR",
+          "powers": [
+            "ITA"
+          ],
+          "provinces": [
+            "LON"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -4,7 +4,6 @@ import ddejonge.bandana.dbraneTactics.DBraneTactics;
 import ddejonge.bandana.dbraneTactics.Plan;
 import ddejonge.bandana.gameBuilder.DiplomacyGameBuilder;
 import ddejonge.bandana.negoProtocol.BasicDeal;
-import ddejonge.bandana.negoProtocol.DMZ;
 import es.csic.iiia.fabregues.dip.board.Game;
 import es.csic.iiia.fabregues.dip.board.Power;
 
@@ -16,14 +15,16 @@ public class PreferedOpenings {
     private static List<BasicDeal> commitments = Collections.emptyList();
 
     public static void main(String[] args) {
-        game.getProvince("GOB").getRegions().forEach(region -> System.out.println(region.getAdjacentRegions()));
-        commitments = Arrays.asList(new BasicDeal(
-                Collections.emptyList(),
-                Arrays.asList(
-                        new DMZ(game.getYear(), game.getPhase(), Arrays.asList(game.getPower("RUS")), Arrays.asList(game.getProvince("BLA")))
-                )
-        ));
-        game.getPowers().forEach(PreferedOpenings::printPreferredMoves);
+//        game.getRegions().forEach(region -> System.out.println(region+" "+region.getAdjacentRegions()));
+//        commitments = Arrays.asList(new BasicDeal(
+//                Collections.emptyList(),
+//                Arrays.asList(
+//                        new DMZ(game.getYear(), game.getPhase(), Arrays.asList(game.getPower("RUS")), Arrays.asList(game.getProvince("BLA")))
+//                )
+//        ));
+//        game.getPowers().forEach(PreferedOpenings::printPreferredMoves);
+//        System.out.println(StrategyList.REGISTER.equals(OldRegister.OldREGISTER));
+
     }
 
     private static void printPreferredMoves(Power power) {

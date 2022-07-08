@@ -1,0 +1,229 @@
+{
+  "plans": [
+    {
+      "name": "Southern Hedgehog, GER DMZ",
+      "weight": 10,
+      "targets": [
+        "RUS",
+        "TUR",
+        "ITA"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "AUS",
+          "location": "TRIFLT",
+          "dest": "VENFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "AUS",
+          "location": "VIEAMY",
+          "dest": "GALAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "AUS",
+          "location": "BUDAMY",
+          "dest": "SERAMY"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "SPR",
+          "powers": [
+            "GER"
+          ],
+          "provinces": [
+            "TYR",
+            "TRI",
+            "BOH"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BFF FFF",
+      "weight": 10,
+      "targets": [
+        "ITA"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "MUNAMY",
+          "dest": "TYRAMY"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "AUT",
+          "powers": [
+            "GER"
+          ],
+          "provinces": [
+            "VIE",
+            "TRI",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1902,
+          "phase": "SPR",
+          "powers": [
+            "GER"
+          ],
+          "provinces": [
+            "VIE",
+            "TRI",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1902,
+          "phase": "AUT",
+          "powers": [
+            "GER"
+          ],
+          "provinces": [
+            "VIE",
+            "TRI",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1901,
+          "phase": "AUT",
+          "powers": [
+            "AUS"
+          ],
+          "provinces": [
+            "MUN",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1902,
+          "phase": "SPR",
+          "powers": [
+            "AUS"
+          ],
+          "provinces": [
+            "MUN",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1902,
+          "phase": "AUT",
+          "powers": [
+            "AUS"
+          ],
+          "provinces": [
+            "MUN",
+            "BOH"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ger Aus -> Russia attack",
+      "weight": 10,
+      "targets": [
+        "RUS"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "MUNAMY",
+          "dest": "TYRAMY"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "AUT",
+          "powers": [
+            "GER"
+          ],
+          "provinces": [
+            "VIE",
+            "TRI",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1902,
+          "phase": "SPR",
+          "powers": [
+            "GER"
+          ],
+          "provinces": [
+            "VIE",
+            "TRI",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1902,
+          "phase": "AUT",
+          "powers": [
+            "GER"
+          ],
+          "provinces": [
+            "VIE",
+            "TRI",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1901,
+          "phase": "AUT",
+          "powers": [
+            "AUS"
+          ],
+          "provinces": [
+            "MUN",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1902,
+          "phase": "SPR",
+          "powers": [
+            "AUS"
+          ],
+          "provinces": [
+            "MUN",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1902,
+          "phase": "AUT",
+          "powers": [
+            "AUS"
+          ],
+          "provinces": [
+            "MUN",
+            "BOH"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "plans": [
+    {
+      "name": "ENG Northern Opening, Fra Support",
+      "weight": 10,
+      "targets": [
+        "GER"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "EDIFLT",
+          "dest": "NWGFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "LONFLT",
+          "dest": "NTHFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "PARAMY",
+          "dest": "BURAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "ENG",
+          "location": "NTHFLT",
+          "dest": "BELFLT"
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "FRA",
+          "loc": "BURAMY",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "ENG",
+            "location": "NTHFLT",
+            "dest": "BELFLT"
+          }
+        }
+      ],
+      "dmzs": []
+    },
+    {
+      "name": "FRA Eng Ger Attack",
+      "weight": 10,
+      "targets": [
+        "GER"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "BREFLT",
+          "dest": "MAOFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "MARAMY",
+          "dest": "BURAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ENG",
+          "location": "LONFLT",
+          "dest": "ECHFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "ENG",
+          "location": "ECHFLT",
+          "dest": "BELFLT"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "AUT",
+          "powers": [
+            "FRA"
+          ],
+          "provinces": [
+            "BEL"
+          ]
+        }
+      ]
+    }
+  ]
+}

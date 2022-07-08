@@ -1,0 +1,62 @@
+{
+  "plans": [
+    {
+      "name": "ITA TYR Attack Turkey Support",
+      "weight": 10,
+      "targets": [
+        "AUS"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ITA",
+          "location": "VENAMY",
+          "dest": "TYRAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ITA",
+          "location": "ROMAMY",
+          "dest": "VENAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ITA",
+          "location": "NAPFLT",
+          "dest": "IONFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "TUR",
+          "location": "CONAMY",
+          "dest": "BULAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "TUR",
+          "location": "BULAMY",
+          "dest": "SERAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "ITA",
+          "location": "IONFLT",
+          "dest": "GREFLT"
+        }
+      ],
+      "dmzs": []
+    }
+  ]
+}

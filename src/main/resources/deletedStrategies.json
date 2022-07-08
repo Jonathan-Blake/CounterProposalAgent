@@ -1,0 +1,112 @@
+[
+  {
+    "name": "The unbelivably stupid germany attack",
+    "weight": 10,
+    "targets": [
+      "GER"
+    ],
+    "orders": [
+      {
+        "type": "MTO",
+        "year": 1901,
+        "phase": "SPR",
+        "power": "ITA",
+        "location": "VENAMY",
+        "dest": "TYRAMY"
+      },
+      {
+        "type": "MTO",
+        "year": 1901,
+        "phase": "SPR",
+        "power": "ITA",
+        "location": "ROMAMY",
+        "dest": "VENAMY"
+      },
+      {
+        "type": "MTO",
+        "year": 1901,
+        "phase": "SPR",
+        "power": "AUS",
+        "location": "VIEAMY",
+        "dest": "BOHAMY"
+      },
+      {
+        "type": "MTO",
+        "year": 1901,
+        "phase": "AUT",
+        "power": "ITA",
+        "location": "TYRAMY",
+        "dest": "MUNAMY"
+      },
+      {
+        "type": "MTO",
+        "year": 1901,
+        "phase": "AUT",
+        "power": "ITA",
+        "location": "VENAMY",
+        "dest": "TYRAMY"
+      },
+      {
+        "type": "SUPMTO",
+        "year": 1901,
+        "phase": "AUT",
+        "power": "AUS",
+        "loc": "BOHAMY",
+        "mto": {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "ITA",
+          "location": "TYRAMY",
+          "dest": "MUNAMY"
+        }
+      }
+    ],
+    "dmzs": [
+      {
+        "year": 1901,
+        "phase": "SPR",
+        "powers": [
+          "ITA"
+        ],
+        "provinces": [
+          "TRI",
+          "VIE"
+        ]
+      },
+      {
+        "year": 1901,
+        "phase": "AUT",
+        "powers": [
+          "ITA"
+        ],
+        "provinces": [
+          "TRI",
+          "VIE"
+        ]
+      },
+      {
+        "year": 1902,
+        "phase": "SPR",
+        "powers": [
+          "ITA"
+        ],
+        "provinces": [
+          "TRI",
+          "VIE"
+        ]
+      },
+      {
+        "year": 1902,
+        "phase": "AUT",
+        "powers": [
+          "ITA"
+        ],
+        "provinces": [
+          "TRI",
+          "VIE"
+        ]
+      }
+    ]
+  }
+]

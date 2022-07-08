@@ -1,0 +1,55 @@
+{
+  "plans": [
+    {
+      "name": "Ger Tur -> Russia Attack",
+      "weight": 9,
+      "targets": [
+        "RUS"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "KIEFLT",
+          "dest": "DENFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "GER",
+          "location": "DENFLT",
+          "dest": "SWEFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "MUNAMY",
+          "dest": "SILAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "TUR",
+          "location": "ANKFLT",
+          "dest": "BLAFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "TUR",
+          "location": "SMYAMY",
+          "dest": "ARMAMY"
+        }
+      ],
+      "dmzs": [
+      ]
+    }
+  ]
+}

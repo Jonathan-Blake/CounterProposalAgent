@@ -1,0 +1,46 @@
+{
+  "plans": [
+    {
+      "name": "Peace in center",
+      "weight": 10,
+      "targets": [],
+      "orders": [],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "SPR",
+          "powers": [
+            "GER"
+          ],
+          "provinces": [
+            "TYR",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1901,
+          "phase": "SPR",
+          "powers": [
+            "AUS"
+          ],
+          "provinces": [
+            "VEN",
+            "TYR",
+            "BOH"
+          ]
+        },
+        {
+          "year": 1901,
+          "phase": "SPR",
+          "powers": [
+            "ITA"
+          ],
+          "provinces": [
+            "TRI",
+            "TYR"
+          ]
+        }
+      ]
+    }
+  ]
+}

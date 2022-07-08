@@ -1,0 +1,72 @@
+{
+  "plans": [
+    {
+      "name": "Aus Tur Balklans Division",
+      "weight": 9,
+      "targets": [
+        "RUS"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "AUS",
+          "location": "BUDAMY",
+          "dest": "SERAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "AUS",
+          "location": "TRIFLT",
+          "dest": "ALBFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "TUR",
+          "location": "CONAMY",
+          "dest": "BULAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "TUR",
+          "location": "BULAMY",
+          "dest": "RUMAMY"
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "AUS",
+          "loc": "SERAMY",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "TUR",
+            "location": "BULAMY",
+            "dest": "RUMAMY"
+          }
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "AUT",
+          "powers": [
+            "TUR"
+          ],
+          "provinces": [
+            "GRE"
+          ]
+        }
+      ]
+    }
+  ]
+}

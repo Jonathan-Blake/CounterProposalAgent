@@ -1,0 +1,102 @@
+{
+  "plans": [
+    {
+      "name": "ITA FRA Attack Ger Support",
+      "weight": 10,
+      "targets": [
+        "FRA"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ITA",
+          "location": "VENAMY",
+          "dest": "PIEAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ITA",
+          "location": "ROMAMY",
+          "dest": "VENAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "location": "MUNAMY",
+          "dest": "BURAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "ITA",
+          "location": "PIEAMY",
+          "dest": "MARAMY"
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "GER",
+          "loc": "BURAMY",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "ITA",
+            "location": "PIEAMY",
+            "dest": "MARAMY"
+          }
+        }
+      ],
+      "dmzs": []
+    },
+    {
+      "name": "ITA GER -> AUS",
+      "weight": 5,
+      "targets": [
+        "AUS"
+      ],
+      "orders": [
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "GER",
+          "loc": "MUNAMY",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "SPR",
+            "power": "ITA",
+            "location": "VENAMY",
+            "dest": "TYRAMY"
+          }
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ITA",
+          "location": "VENAMY",
+          "dest": "TYRAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ITA",
+          "location": "ROMAMY",
+          "dest": "VENAMY"
+        }
+      ],
+      "dmzs": []
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 package blake.bot.messages;
 
-import blake.bot.agents.CounterProposalAgent;
+import blake.bot.agents.DomainKnowledgeAgent;
 import blake.bot.utility.DatedObject;
 import ddejonge.bandana.gameBuilder.DiplomacyGameBuilder;
 import ddejonge.bandana.negoProtocol.BasicDeal;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ConversationInfoTest {
     @SuppressWarnings("unused") // Stringifier relies on static fields to get game to read deal string
-    private static final CounterProposalAgent agent = new CounterProposalAgent();
+    private static final DomainKnowledgeAgent agent = new DomainKnowledgeAgent();
 
     private static final String CONVERSATION_ID = "CONVO_ID";
     private static final String PROPOSAL_ID = "PROPOSAL_ID";

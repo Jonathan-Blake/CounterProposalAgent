@@ -1,0 +1,125 @@
+{
+  "plans": [
+    {
+      "name": "FRA Pie Opening",
+      "weight": 10,
+      "targets": [
+        "ITA"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "BREFLT",
+          "dest": "MAOFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "MARAMY",
+          "dest": "PIEAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "PARAMY",
+          "dest": "GASAMY"
+        },
+        {
+          "type": "HLD",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "AUS",
+          "region": "TRIFLT"
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "AUS",
+          "loc": "TRIFLT",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "FRA",
+            "location": "PIEAMY",
+            "dest": "VENAMY"
+          }
+        }
+      ],
+      "dmzs": []
+    },
+    {
+      "name": "FRA Pie Opening alt",
+      "weight": 10,
+      "targets": [
+        "ITA"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "BREFLT",
+          "dest": "MAOFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "MARAMY",
+          "dest": "PIEAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "PARAMY",
+          "dest": "GASAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "AUS",
+          "location": "TRIFLT",
+          "dest": "ALBFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "VIEAMY",
+          "dest": "TRIAMY"
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "FRA",
+          "loc": "PIEAMY",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "FRA",
+            "location": "TRIAMY",
+            "dest": "VENAMY"
+          }
+        }
+      ],
+      "dmzs": []
+    }
+  ]
+}

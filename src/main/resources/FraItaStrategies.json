@@ -1,0 +1,41 @@
+{
+  "plans": [
+    {
+      "name": "ITA TYR Attack FRA DMZ",
+      "weight": 10,
+      "targets": [
+        "AUS"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ITA",
+          "location": "VENAMY",
+          "dest": "TYRAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "ITA",
+          "location": "ROMAMY",
+          "dest": "VENAMY"
+        }
+      ],
+      "dmzs": [
+        {
+          "year": 1901,
+          "phase": "SPR",
+          "powers": [
+            "FRA"
+          ],
+          "provinces": [
+            "PIE"
+          ]
+        }
+      ]
+    }
+  ]
+}
