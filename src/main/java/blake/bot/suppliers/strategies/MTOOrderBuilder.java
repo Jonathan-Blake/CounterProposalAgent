@@ -42,7 +42,7 @@ public class MTOOrderBuilder implements OrderBuilder {
         final Region region = game.getRegion(location);
         final Region region1 = game.getRegion(dest);
         if ((gamePower == null || region == null || region1 == null)) {
-            throw new AssertionError("Error Attempting to get " + this.power + " " + location + " " + dest);
+            throw new AssertionError("Error Attempting to get " + gamePower + " " + location + " " + dest);
         }
         return new OrderCommitment(year, phase, new MTOOrder(gamePower, region, region1));
     }

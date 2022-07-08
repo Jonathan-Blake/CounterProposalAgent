@@ -99,7 +99,7 @@
           "type": "MTO",
           "year": 1901,
           "phase": "SPR",
-          "power": "FRA",
+          "power": "AUS",
           "location": "VIEAMY",
           "dest": "TRIAMY"
         },
@@ -114,6 +114,71 @@
             "year": 1901,
             "phase": "AUT",
             "power": "FRA",
+            "location": "TRIAMY",
+            "dest": "VENAMY"
+          }
+        }
+      ],
+      "dmzs": []
+    },
+    {
+      "name": "FRA Pie Full Commit",
+      "weight": 10,
+      "targets": [
+        "ITA"
+      ],
+      "orders": [
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "BREFLT",
+          "dest": "MAOFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "MARAMY",
+          "dest": "PIEAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "FRA",
+          "location": "PARAMY",
+          "dest": "GASAMY"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "AUS",
+          "location": "TRIFLT",
+          "dest": "ADRFLT"
+        },
+        {
+          "type": "MTO",
+          "year": 1901,
+          "phase": "SPR",
+          "power": "AUS",
+          "location": "VIEAMY",
+          "dest": "TRIAMY"
+        },
+        {
+          "type": "SUPMTO",
+          "year": 1901,
+          "phase": "AUT",
+          "power": "FRA",
+          "loc": "PIEAMY",
+          "mto": {
+            "type": "MTO",
+            "year": 1901,
+            "phase": "AUT",
+            "power": "AUS",
             "location": "TRIAMY",
             "dest": "VENAMY"
           }
