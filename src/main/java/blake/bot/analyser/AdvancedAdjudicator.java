@@ -244,4 +244,16 @@ public class AdvancedAdjudicator {
     public static String getData() {
         return String.format("{ guessOrders: Success = %d failures= %d}", totalOrdersGuessed, totalOrdersExcepted);
     }
+
+    public static List<BasicDeal> guessOrdersForPowers(List<Power> powersToCalculate, Game currentGame) {
+        return powersToCalculate.stream()
+                .map(power -> tacticsMap
+                        .get(power.getName())
+                        .determineBestPlan(currentGame, power, Collections.emptyList())
+                ).map(plan -> new BasicDeal(
+                        plan.getMyOrders().stream().map(order -> new OrderCommitment(currentGame.getYear(), currentGame.getPhase(), order)).collect(Collectors.toList()),
+                        Collections.emptyList()
+                ))
+                .collect(Collectors.toList());
+    }
 }

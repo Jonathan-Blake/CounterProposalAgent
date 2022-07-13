@@ -12,7 +12,7 @@ import es.csic.iiia.fabregues.dip.board.Game;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = MTOOrderBuilder.class, name = "MTO"),
         @JsonSubTypes.Type(value = HLDOrderBuilder.class, name = "HLD"),
-        @JsonSubTypes.Type(value = BLDOrderBuilder.class, name = "BLD"),
+//        @JsonSubTypes.Type(value = BLDOrderBuilder.class, name = "BLD"),
         @JsonSubTypes.Type(value = SUPMTOOrderBuilder.class, name = "SUPMTO")
 }
 )

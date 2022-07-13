@@ -40,8 +40,7 @@ public class MessageHelper {
                 && MessageEventChannels.RECEIVING_ACCEPTANCE.unsubscribe(this.messageAcceptedHook)
                 && MessageEventChannels.RECEIVING_CONFIRMATION.unsubscribe(this.messageConfirmationHook)
                 && MessageEventChannels.RECEIVING_REJECTION.unsubscribe(this.messageRejectionHook)
-                && MessageEventChannels.RECEIVING_PROPOSAL.unsubscribe(this.messageProposalHook)
-                ;
+                && MessageEventChannels.RECEIVING_PROPOSAL.unsubscribe(this.messageProposalHook);
     }
 
     public ConversationInfo getConversation(String conversationId) {

@@ -10,7 +10,6 @@ import es.csic.iiia.fabregues.dip.board.Game;
 import es.csic.iiia.fabregues.dip.board.Phase;
 import es.csic.iiia.fabregues.dip.board.Region;
 import es.csic.iiia.fabregues.dip.orders.*;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -220,18 +219,39 @@ public class AdvancedAdjudicatorTest {
 
 
     @Test
-    @Ignore("Takes too long, manually test for timing")
+//    @Ignore("Takes too long, manually test for timing")
     public void timingOrderGuessing() {
         final int attempts = 1000;
         long[] times = new long[attempts];
+        final Game defaultGame = DiplomacyGameBuilder.createDefaultGame();
         for (int i = 0; i < attempts; i++) {
-            final Game defaultGame = DiplomacyGameBuilder.createDefaultGame();
             long start = System.currentTimeMillis();
             AdvancedAdjudicator.guessAllOrders(defaultGame, Collections.emptyList());
             long end = System.currentTimeMillis();
             long timeTaken = end - start;
             times[i] = timeTaken;
         }
+        calculateMeanAndInterval(attempts, times);
+    }
+
+    @Test
+//    @Ignore("Takes too long, manually test for timing")
+    public void timingOrderGuessingWithAssumptions() {
+        final int attempts = 1000;
+        long[] times = new long[attempts];
+        final Game defaultGame = DiplomacyGameBuilder.createDefaultGame();
+        List<BasicDeal> assumptions = AdvancedAdjudicator.guessOrdersForPowers(defaultGame.getNonDeadPowers(), defaultGame);
+        for (int i = 0; i < attempts; i++) {
+            long start = System.currentTimeMillis();
+            AdvancedAdjudicator.guessAllOrders(defaultGame, assumptions);
+            long end = System.currentTimeMillis();
+            long timeTaken = end - start;
+            times[i] = timeTaken;
+        }
+        calculateMeanAndInterval(attempts, times);
+    }
+
+    private void calculateMeanAndInterval(int attempts, long[] times) {
         long sum = 0;
         for (long time : times) {
             sum += time;

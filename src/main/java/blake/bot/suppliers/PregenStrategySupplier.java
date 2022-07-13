@@ -2,6 +2,7 @@ package blake.bot.suppliers;
 
 import blake.bot.suppliers.strategies.StrategyList;
 import blake.bot.suppliers.strategies.StrategyPlan;
+import blake.bot.suppliers.strategies.StrategyRegister;
 import blake.bot.utility.Utility;
 import ddejonge.bandana.dbraneTactics.Plan;
 import ddejonge.bandana.negoProtocol.BasicDeal;
@@ -25,7 +26,7 @@ public class PregenStrategySupplier implements DealGenerator {
     public PregenStrategySupplier(Game game, Power me, List<Power> negotiators, Logger logger) {
         this.game = game;
         this.logger = logger;
-        this.strategies = StrategyList.REGISTER
+        this.strategies = StrategyRegister.REGISTER
                 .filter(strategyPlan -> strategyPlan.participants().contains(me.getName()))
                 .filter(strategyPlan -> Utility.Lists.mapList(negotiators, Power::getName).containsAll(strategyPlan.participants()))
                 .filter(strategyPlan -> !strategyPlan.targets().contains(me.getName()))
@@ -64,10 +65,6 @@ public class PregenStrategySupplier implements DealGenerator {
     }
 
     public Optional<StrategyPlan> match(BasicDeal deal) {
-        return this.strategies.getPlans().stream()
-                .filter(
-                        strategyPlan -> Utility.Deals.areIdentical(deal, strategyPlan.build(this.game))
-                )
-                .findFirst();
+        return this.strategies.match(deal, this.game);
     }
 }

@@ -2,7 +2,7 @@
   "plans": [
     {
       "name": "Peace in center",
-      "weight": 10,
+      "weight": 8,
       "targets": [],
       "orders": [],
       "dmzs": [

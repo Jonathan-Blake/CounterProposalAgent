@@ -2,7 +2,7 @@
   "plans": [
     {
       "name": "FRA Bur Opening Norwegian conflict",
-      "weight": 10,
+      "weight": 9,
       "targets": [
         "GER",
         "ENG"
@@ -45,7 +45,7 @@
     },
     {
       "name": "Rus Octopus",
-      "weight": 10,
+      "weight": 9,
       "targets": [
         "ENG",
         "TUR"

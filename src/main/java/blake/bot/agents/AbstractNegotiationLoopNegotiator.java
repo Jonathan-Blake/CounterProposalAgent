@@ -32,23 +32,7 @@ public abstract class AbstractNegotiationLoopNegotiator extends ANACNegotiator {
                 loopSinceMessage = 0;
                 Message receivedMessage = this.removeMessageFromQueue();
                 this.getLogger().logln("got message " + receivedMessage.getContent(), true);
-
-                switch (receivedMessage.getPerformative()) {
-                    case "ACCEPT":
-                        handleAcceptanceMessage(receivedMessage);
-                        break;
-                    case "PROPOSE":
-                        handleProposalMessage(receivedMessage);
-                        break;
-                    case "CONFIRM":
-                        handleConfirmationMessage(receivedMessage);
-                        break;
-                    case "REJECT":
-                        handleRejectedMessage(receivedMessage);
-                        break;
-                    default:
-                        this.getLogger().logln("Unexpected message performative : " + receivedMessage.getPerformative());
-                }
+                handleMessage(receivedMessage);
             } else {
                 final Iterator<BasicDeal> iterator = this.getProposalSupplier().iterator();
                 if (iterator.hasNext()) {
@@ -56,13 +40,33 @@ public abstract class AbstractNegotiationLoopNegotiator extends ANACNegotiator {
                 } else {
                     this.getLogger().logln("Unable to find deal", true);
                 }
-                if (++loopSinceMessage >= 5) {
-                    //break if more than a second and no more deals are accepted or offered
+                if (++loopSinceMessage >= 10 && !iterator.hasNext()) {
+                    // break if more than a second and no more deals are accepted or offered
+                    // and has no more deals to propose
                     break;
                 } else {
-                    sleep(200L);
+                    sleep(100L);
                 }
             }
+        }
+    }
+
+    private void handleMessage(Message receivedMessage) {
+        switch (receivedMessage.getPerformative()) {
+            case "ACCEPT":
+                handleAcceptanceMessage(receivedMessage);
+                break;
+            case "PROPOSE":
+                handleProposalMessage(receivedMessage);
+                break;
+            case "CONFIRM":
+                handleConfirmationMessage(receivedMessage);
+                break;
+            case "REJECT":
+                handleRejectedMessage(receivedMessage);
+                break;
+            default:
+                this.getLogger().logln("Unexpected message performative : " + receivedMessage.getPerformative());
         }
     }
 

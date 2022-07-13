@@ -76,27 +76,6 @@
             "location": "PICAMY",
             "dest": "BELAMY"
           }
-        },
-        {
-          "type": "BLD",
-          "year": 1901,
-          "phase": "FAL",
-          "power": "FRA",
-          "region": "BREFLT"
-        },
-        {
-          "type": "BLD",
-          "year": 1901,
-          "phase": "FAL",
-          "power": "FRA",
-          "region": "MARFLT"
-        },
-        {
-          "type": "BLD",
-          "year": 1901,
-          "phase": "FAL",
-          "power": "GER",
-          "region": "KIEFLT"
         }
       ],
       "dmzs": []

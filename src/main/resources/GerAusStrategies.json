@@ -2,7 +2,7 @@
   "plans": [
     {
       "name": "Southern Hedgehog, GER DMZ",
-      "weight": 10,
+      "weight": 9,
       "targets": [
         "RUS",
         "TUR",

@@ -108,5 +108,139 @@
         ]
       }
     ]
+  },
+  {
+    "name": "ITA Sleeper Attack",
+    "weight": 10,
+    "targets": [
+      "FRA"
+    ],
+    "orders": [
+      {
+        "type": "HLD",
+        "year": 1901,
+        "phase": "SPR",
+        "power": "ITA",
+        "region": "VENAMY"
+      },
+      {
+        "type": "HLD",
+        "year": 1901,
+        "phase": "SPR",
+        "power": "ITA",
+        "region": "ROMAMY"
+      },
+      {
+        "type": "HLD",
+        "year": 1901,
+        "phase": "AUT",
+        "power": "ITA",
+        "region": "VENAMY"
+      },
+      {
+        "type": "HLD",
+        "year": 1901,
+        "phase": "AUT",
+        "power": "ITA",
+        "region": "ROMAMY"
+      },
+      {
+        "type": "MTO",
+        "year": 1901,
+        "phase": "SPR",
+        "power": "ITA",
+        "location": "NAPFLT",
+        "dest": "IONFLT"
+      },
+      {
+        "type": "MTO",
+        "year": 1901,
+        "phase": "AUT",
+        "power": "ITA",
+        "location": "IONFLT",
+        "dest": "TUNFLT"
+      },
+      {
+        "type": "BLD",
+        "year": 1901,
+        "phase": "FAL",
+        "power": "ITA",
+        "region": "NAPFLT"
+      },
+      {
+        "type": "MTO",
+        "year": 1902,
+        "phase": "SPR",
+        "power": "ITA",
+        "location": "VENAMY",
+        "dest": "PIEAMY"
+      },
+      {
+        "type": "MTO",
+        "year": 1902,
+        "phase": "SPR",
+        "power": "ITA",
+        "location": "ROMAMY",
+        "dest": "VENAMY"
+      },
+      {
+        "type": "MTO",
+        "year": 1902,
+        "phase": "SPR",
+        "power": "ITA",
+        "location": "TUNFLT",
+        "dest": "WESFLT"
+      },
+      {
+        "type": "MTO",
+        "year": 1902,
+        "phase": "SPR",
+        "power": "ITA",
+        "location": "NAPFLT",
+        "dest": "TUNFLT"
+      }
+    ],
+    "dmzs": [
+      {
+        "year": 1901,
+        "phase": "SPR",
+        "powers": [
+          "AUS"
+        ],
+        "provinces": [
+          "VEN"
+        ]
+      },
+      {
+        "year": 1901,
+        "phase": "AUT",
+        "powers": [
+          "AUS"
+        ],
+        "provinces": [
+          "VEN"
+        ]
+      },
+      {
+        "year": 1902,
+        "phase": "SPR",
+        "powers": [
+          "AUS"
+        ],
+        "provinces": [
+          "VEN"
+        ]
+      },
+      {
+        "year": 1902,
+        "phase": "AUT",
+        "powers": [
+          "AUS"
+        ],
+        "provinces": [
+          "VEN"
+        ]
+      }
+    ]
   }
 ]

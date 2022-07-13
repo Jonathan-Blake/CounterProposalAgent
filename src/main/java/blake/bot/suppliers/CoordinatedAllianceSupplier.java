@@ -1,7 +1,5 @@
-package blake.bot.agents;
+package blake.bot.suppliers;
 
-import blake.bot.suppliers.BasicDealIterator;
-import blake.bot.suppliers.DealGenerator;
 import blake.bot.utility.HashableRegion;
 import blake.bot.utility.HashedPower;
 import blake.bot.utility.Utility;

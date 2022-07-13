@@ -59,7 +59,7 @@
     },
     {
       "name": "ITA GER -> AUS",
-      "weight": 5,
+      "weight": 9,
       "targets": [
         "AUS"
       ],

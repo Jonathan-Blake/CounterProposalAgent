@@ -1,8 +1,8 @@
 {
   "plans": [
     {
-      "name": "Rus Tur Attack",
-      "weight": 10,
+      "name": "Rus AUS Peace deal",
+      "weight": 9,
       "targets": [
         "TUR"
       ],
@@ -29,10 +29,21 @@
           "year": 1901,
           "phase": "SPR",
           "powers": [
-            "AUS"
+            "AUS",
+            "RUS"
           ],
           "provinces": [
             "GAL"
+          ]
+        },
+        {
+          "year": 1901,
+          "phase": "AUT",
+          "powers": [
+            "AUS"
+          ],
+          "provinces": [
+            "RUM"
           ]
         }
       ]

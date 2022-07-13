@@ -6,6 +6,7 @@ import blake.bot.messages.MessageEventChannels;
 import blake.bot.messages.MessageHelper;
 import blake.bot.suppliers.*;
 import blake.bot.suppliers.strategies.StrategyPlan;
+import blake.bot.suppliers.strategies.StrategyRegister;
 import blake.bot.utility.HashedPower;
 import blake.bot.utility.Relationship;
 import blake.bot.utility.RelationshipMatrix;
@@ -28,6 +29,8 @@ public class DomainKnowledgeAgent extends AbstractNegotiationLoopNegotiator {
     public static final double LIKE_LIKELIHOOD = 0.7;
 
     private final PlanCache planCache;
+    @SuppressWarnings("unused")
+    // Could be removed but I like it.
     private final MessageHelper messageHelper;
     private final Map<String, Integer> acceptanceSource;
     private CounterProposalSupplier counterProposalProposal;
@@ -36,6 +39,7 @@ public class DomainKnowledgeAgent extends AbstractNegotiationLoopNegotiator {
     private RelationshipMatrix<Double> relationshipMatrix;
     private boolean isFirstTurn;
     private PregenStrategySupplier preGenPlanSupplier;
+    private List<BasicDeal> assumptions;
 
     public DomainKnowledgeAgent(String[] args) {
         super(args);
@@ -44,80 +48,9 @@ public class DomainKnowledgeAgent extends AbstractNegotiationLoopNegotiator {
         acceptanceSource = new HashMap<>();
         this.isFirstTurn = true;
         MessageEventChannels.RECEIVING_PROPOSAL.subscribe(
-                event -> {
-                    Message receivedMessage = event.getMessage();
-                    DiplomacyProposal receivedProposal = (DiplomacyProposal) receivedMessage.getContent();
-                    BasicDeal deal = (BasicDeal) receivedProposal.getProposedDeal();
-                    if (Utility.Plans.testConsistency(deal, this.getGame(), this.getConfirmedDeals())) {
-                        AnalysedPlan newPlan = planCache.analysePlan(
-                                new PlanInfo(
-                                        this.game,
-                                        new HashedPower(this.getMe()),
-                                        this.getConfirmedDeals(),
-                                        deal,
-                                        Collections.emptyList())
-                        );
-                        newPlan.getInfo().setDealId(receivedProposal.getId());
+                this::acceptOrRejectIncomingProposal);
 
-                        Optional<StrategyPlan> strategy;
-                        if (planCache.betterThanNoDeal(newPlan)) {
-                            this.acceptanceSource.merge("Plan is better", 1, Integer::sum);
-                            this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
-                            this.getLogger().logln("DKAAgent.negotiate() Accepted proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
-                        } else if (preGenPlanSupplier != null && (strategy = preGenPlanSupplier.match(deal)).isPresent()) {
-                            final StrategyPlan strategyPlan = strategy.get();
-                            this.getLogger().logln("DKAgent.negotiate() Recognised incoming pre-generated plan " + strategyPlan.name);
-                            if (strategyPlan.targets().contains(this.me.getName())) {
-                                this.getLogger().logln("But I am the target", true);
-                                this.rejectAndDislikeProposal(receivedProposal.getId(), receivedMessage.getSender());
-                                this.acceptanceSource.merge("Target of pregenerated Strategy " + strategyPlan.name, 1, Integer::sum);
-                            } else {
-                                this.getLogger().logln("Accepting", true);
-                                this.acceptanceSource.merge("Pregenerated Strategy " + strategyPlan.name, 1, Integer::sum);
-                                this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
-                            }
-                        } else if (
-                                newPlan.getDBraneValue() - this.planCache.getNoDealAnalysedPlan().getDBraneValue() == 0
-                                        && (this.planCache.getNoDealPlan().getMyOrders().containsAll(newPlan.getPlan().getMyOrders())
-                                        || this.getAllies().contains(this.game.getPower(receivedMessage.getSender())))
-                        ) {
-                            this.getLogger().logln("DKAAgent.negotiate() Accepted proposal (same orders or ally) from " + receivedMessage.getSender() + ": " + receivedProposal, true);
-                            this.getLogger().logln("My plan was " + this.planCache.getNoDealPlan().getMyOrders(), true);
-                            this.getLogger().logln("The proposal was " + newPlan.getPlan().getMyOrders(), true);
-                            this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
-//                            this.acceptProposal(receivedProposal.getId());
-                            this.acceptanceSource.merge("Orders are the same", 1, Integer::sum);
-                        } else if (newPlan.getDBraneValue() - planCache.getNoDealAnalysedPlan().getDBraneValue() == 0) {
-//                            this.acceptProposal(receivedProposal.getId());
-                            this.acceptanceSource.merge("Plan is not worse", 1, Integer::sum);
-                            if (this.counterProposalProposal == null) {
-                                this.getProposalSupplier();
-                            }
-                            this.counterProposalProposal.addOffer(receivedProposal);
-                            this.rejectProposal(receivedProposal.getId());
-//                            this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
-                            this.getLogger().logln("DKAAgent.negotiate() CounterPropose proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
-                        } else {
-                            this.acceptanceSource.merge("Plan Rejected", 1, Integer::sum);
-                            this.getLogger().logln("DKAAgent.negotiate() Rejected proposal from " + receivedMessage.getSender() + ": " + receivedProposal);
-                            this.rejectAndDislikeProposal(receivedProposal.getId(), receivedMessage.getSender());
-                        }
-                    } else {
-                        this.acceptanceSource.merge("Plan is inconsistent", 1, Integer::sum);
-                        this.getLogger().logln("DKAAgent.negotiate() Rejected proposal from " + receivedMessage.getSender() + ": " + receivedProposal);
-                        this.rejectProposal(receivedProposal.getId());
-                    }
-                    return true;
-                });
-
-        MessageEventChannels.RECEIVING_ACCEPTANCE.subscribe((event -> {
-            DiplomacyProposal proposal = (DiplomacyProposal) event.getMessage().getContent();
-            if (proposal.getId().contains(this.me.getName())) {
-                this.getLogger().logln("My proposal " + proposal.getId() + " was accepted by " + event.getMessage().getSender(), true);
-                this.like(event.getMessage().getSender());
-            }
-            return true;
-        }));
+        MessageEventChannels.RECEIVING_ACCEPTANCE.subscribe((this::logProposalWasAccepted));
     }
 
     //Used for testing methods
@@ -151,6 +84,7 @@ public class DomainKnowledgeAgent extends AbstractNegotiationLoopNegotiator {
         this.proposalSupplier = null;
         this.previouslyOwned = this.getMe().getOwnedSCs();
         this.isFirstTurn = false;
+        this.assumptions = null;
         this.getLogger().logln("DomainKnowledgeAgent adjudicator data: " + AdvancedAdjudicator.getData(), true);
         this.getLogger().logln(String.format("PlanCache data: accepted = %d rejected = %d, Future Accept = %d, Future Reject = %d, DB Accept = %d, DB Reject = %d", PlanCache.getPlanIsBetter(), PlanCache.getPlanIsWorse(), PlanCache.getFutureAccepts(), PlanCache.getFutureRejects(), PlanCache.getDumbBotAccepts(), PlanCache.getDumbBotRejects()), true);
         this.getLogger().logln(String.format("Orders received : %s ", Arrays.toString(acceptanceSource.entrySet().toArray())), true);
@@ -160,10 +94,6 @@ public class DomainKnowledgeAgent extends AbstractNegotiationLoopNegotiator {
     protected void handleRejectedMessage(Message receivedMessage) {
         MessageEventChannels.RECEIVING_REJECTION.publish(new MessageEvent(receivedMessage));
         DiplomacyProposal receivedProposal = (DiplomacyProposal) receivedMessage.getContent();
-//        if (receivedMessage.getMessageId().contains(this.getMe().getName())) {
-//            //Rejected my proposal
-//        }
-//        this.planCache.removePlan(PlanInfoMatcher.dealId(receivedMessage.getMessageId()));
         this.getLogger().logln("DomainKnowledgeAgent.negotiate() Received rejection from " + receivedMessage.getSender() + ": " + receivedProposal, true);
     }
 
@@ -213,6 +143,7 @@ public class DomainKnowledgeAgent extends AbstractNegotiationLoopNegotiator {
 
     @Override
     public void start() {
+        // Required by Inheritance
     }
 
     @Override
@@ -244,6 +175,13 @@ public class DomainKnowledgeAgent extends AbstractNegotiationLoopNegotiator {
                 }
             }
         }
+    }
+
+    private List<BasicDeal> getAssumedMoves() {
+        if (this.assumptions == null) {
+            this.assumptions = AdvancedAdjudicator.guessOrdersForPowers(Utility.Lists.createFilteredList(game.getNonDeadPowers(), this.getNegotiatingPowers()), this.getGame());
+        }
+        return this.assumptions;
     }
 
     private void acceptAndClearInconsistentPlans(String id, String sender, List<BasicDeal> newCommitments) {
@@ -316,5 +254,99 @@ public class DomainKnowledgeAgent extends AbstractNegotiationLoopNegotiator {
                             )));
             this.getLogger().logln(String.format("CounterProposal likes %s : %s -> %s", power.getName(), currentRelationship.get(), this.getRelationshipMatrix().getRelationship(power)));
         });
+    }
+
+    private boolean acceptOrRejectIncomingProposal(MessageEvent event) {
+        Message receivedMessage = event.getMessage();
+        DiplomacyProposal receivedProposal = (DiplomacyProposal) receivedMessage.getContent();
+        BasicDeal deal = (BasicDeal) receivedProposal.getProposedDeal();
+        if (Utility.Plans.testConsistency(deal, this.getGame(), this.getConfirmedDeals())) {
+            AnalysedPlan newPlan = planCache.analysePlan(
+                    new PlanInfo(
+                            this.game,
+                            new HashedPower(this.getMe()),
+                            this.getConfirmedDeals(),
+                            deal,
+                            Collections.emptyList())
+            );
+            newPlan.getInfo().setDealId(receivedProposal.getId());
+
+            Optional<StrategyPlan> strategy;
+            if (planCache.betterThanNoDeal(newPlan)) {
+                this.acceptanceSource.merge("Plan is better", 1, Integer::sum);
+                this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
+                this.getLogger().logln("DKAAgent.negotiate() Accepted proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+            } else if (preGenPlanSupplier != null && (strategy = preGenPlanSupplier.match(deal)).isPresent()) {
+                acceptOrRejectIncomingStrategy(receivedMessage, receivedProposal, deal, strategy.get());
+            } else if (
+                    newPlan.getDBraneValue() - this.planCache.getNoDealAnalysedPlan().getDBraneValue() == 0
+                            && (this.planCache.getNoDealPlan().getMyOrders().containsAll(newPlan.getPlan().getMyOrders())
+                            || this.getAllies().contains(this.game.getPower(receivedMessage.getSender()))
+                    )
+            ) {
+                this.getLogger().logln("DKAAgent.negotiate() Accepted proposal (same orders or ally) from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+                this.getLogger().logln("My plan was " + this.planCache.getNoDealPlan().getMyOrders(), true);
+                this.getLogger().logln("The proposal was " + newPlan.getPlan().getMyOrders(), true);
+                this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
+                this.acceptanceSource.merge("Orders are the same", 1, Integer::sum);
+            } else if (newPlan.getDBraneValue() - planCache.getNoDealAnalysedPlan().getDBraneValue() == 0) {
+                counterProposeMessage(receivedMessage, receivedProposal);
+            } else {
+                this.acceptanceSource.merge("Plan Rejected", 1, Integer::sum);
+                this.getLogger().logln("DKAAgent.negotiate() Rejected proposal from " + receivedMessage.getSender() + ": " + receivedProposal);
+                this.rejectAndDislikeProposal(receivedProposal.getId(), receivedMessage.getSender());
+            }
+        } else {
+            this.acceptanceSource.merge("Plan is inconsistent", 1, Integer::sum);
+            this.getLogger().logln("DKAAgent.negotiate() Rejected proposal from " + receivedMessage.getSender() + ": " + receivedProposal);
+            this.rejectProposal(receivedProposal.getId());
+        }
+        return true;
+    }
+
+    private void counterProposeMessage(Message receivedMessage, DiplomacyProposal receivedProposal) {
+        this.acceptanceSource.merge("Plan is not worse", 1, Integer::sum);
+        if (this.counterProposalProposal == null) {
+            this.getProposalSupplier();
+        }
+        this.counterProposalProposal.addOffer(receivedProposal);
+        this.rejectProposal(receivedProposal.getId());
+        this.getLogger().logln("DKAAgent.negotiate() CounterPropose proposal from " + receivedMessage.getSender() + ": " + receivedProposal, true);
+    }
+
+    private void acceptOrRejectIncomingStrategy(Message receivedMessage, DiplomacyProposal receivedProposal, BasicDeal deal, StrategyPlan strategyPlan) {
+        this.getLogger().logln("DKAgent.negotiate() Recognised incoming pre-generated plan " + strategyPlan.name);
+        if (strategyPlan.targets().contains(this.me.getName())) {
+            this.getLogger().logln("But I am the target", true);
+            this.rejectAndDislikeProposal(receivedProposal.getId(), receivedMessage.getSender());
+            this.acceptanceSource.merge("Target of pregenerated Strategy " + strategyPlan.name, 1, Integer::sum);
+        } else {
+            this.getLogger().logln("Accepting", true);
+            this.acceptanceSource.merge("Pregenerated Strategy " + strategyPlan.name, 1, Integer::sum);
+            this.acceptAndClearInconsistentPlans(receivedProposal.getId(), receivedMessage.getSender(), Utility.Lists.append(this.getConfirmedDeals(), deal));
+        }
+    }
+
+    private boolean logProposalWasAccepted(MessageEvent event) {
+        DiplomacyProposal proposal = (DiplomacyProposal) event.getMessage().getContent();
+        if (proposal.getId().contains(this.me.getName())) {
+            this.getLogger().logln("My proposal " + proposal.getId() + " was accepted by " + event.getMessage().getSender(), true);
+            this.like(event.getMessage().getSender());
+            Optional<StrategyPlan> isPreparedPlan = StrategyRegister.REGISTER.match((BasicDeal) proposal.getProposedDeal(), this.getGame());
+            if (isPreparedPlan.isPresent()) {
+                this.acceptanceSource.merge(
+                        "proposed " + isPreparedPlan.get().name,
+                        1,
+                        Integer::sum
+                );
+            } else {
+                this.acceptanceSource.merge(
+                        "Proposal Accepted",
+                        1,
+                        Integer::sum
+                );
+            }
+        }
+        return true;
     }
 }

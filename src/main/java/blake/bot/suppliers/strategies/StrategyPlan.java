@@ -74,10 +74,11 @@ public class StrategyPlan {
         return new HashSet<>(targets);
     }
 
+    //Sort in ascending order
     public int getAdjustedWeight(List<Power> negotiators) {
-        List<String> temp = Utility.Lists.mapList(negotiators, Power::getName);
-        temp.retainAll(targets());
-        return weight - participants().size() - temp.size();
+        List<String> negotiatorTargets = Utility.Lists.mapList(negotiators, Power::getName);
+        negotiatorTargets.retainAll(targets());
+        return weight - participants().size() - negotiatorTargets.size();
     }
 
     @Override

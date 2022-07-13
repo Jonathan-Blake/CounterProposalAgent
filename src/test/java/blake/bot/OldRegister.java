@@ -211,7 +211,7 @@ public class OldRegister {
                                     new HLDOrderBuilder(startYear, Phase.AUT, "ITA", "ROMAMY"),
                                     new MTOOrderBuilder(startYear, Phase.SPR, "ITA", "NAPFLT", "IONFLT"),
                                     new MTOOrderBuilder(startYear, Phase.AUT, "ITA", "IONFLT", "TUNFLT"),
-                                    new BLDOrderBuilder(startYear, Phase.FAL, "ITA", "NAPFLT"),
+//                                    new BLDOrderBuilder(startYear, Phase.FAL, "ITA", "NAPFLT"),
                                     new MTOOrderBuilder(startYear + 1, Phase.SPR, "ITA", "VENAMY", "PIEAMY"),
                                     new MTOOrderBuilder(startYear + 1, Phase.SPR, "ITA", "ROMAMY", "VENAMY"),
                                     new MTOOrderBuilder(startYear + 1, Phase.SPR, "ITA", "TUNFLT", "WESFLT"),
